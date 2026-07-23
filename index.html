@@ -33,10 +33,10 @@ button{font-family:inherit;border:none;background:none;color:inherit;cursor:poin
   background:rgba(11,10,20,.55);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);
   border:1px solid rgba(217,179,107,.25);border-radius:99px;padding:3px}
 #langs button{font-size:10.5px;letter-spacing:.06em;font-weight:600;color:rgba(246,239,227,.66);
-  padding:10px 8px;border-radius:99px;transition:.25s;min-width:34px}
+  padding:13px 9px;border-radius:99px;transition:.25s;min-width:36px}
 #langs button.on{background:var(--gold);color:var(--ink)}
-#stamps{position:fixed;top:calc(env(safe-area-inset-top) + 12px);left:10px;z-index:60;display:flex;gap:4px;
-  padding:6px 8px;border-radius:99px;background:rgba(11,10,20,.55);backdrop-filter:blur(10px);
+#stamps{position:fixed;top:calc(env(safe-area-inset-top) + 12px);left:10px;z-index:60;display:flex;gap:4px;align-items:center;min-height:42px;
+  padding:6px 10px;border-radius:99px;background:rgba(11,10,20,.55);backdrop-filter:blur(10px);
   -webkit-backdrop-filter:blur(10px);border:1px solid rgba(217,179,107,.25);transition:opacity .4s}
 #stamps.hidden{opacity:0;pointer-events:none}
 #stamps .ss{width:15px;height:15px;border-radius:50%;border:1px solid rgba(217,179,107,.3);
@@ -55,7 +55,7 @@ button{font-family:inherit;border:none;background:none;color:inherit;cursor:poin
 #bookov.show{opacity:1;pointer-events:auto}
 .bookcard{background:linear-gradient(175deg,var(--paper),var(--paper2));border-radius:18px;padding:24px 22px;
   max-width:340px;width:100%;box-shadow:0 20px 60px rgba(0,0,0,.6);color:#241c10}
-.bookcard .bt{text-align:center;font-size:10px;letter-spacing:.3em;text-indent:.3em;text-transform:uppercase;color:#8c7b58}
+.bookcard .bt{text-align:center;font-size:10px;letter-spacing:.3em;text-indent:.3em;text-transform:uppercase;color:#6b5a3a}
 #bookgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:16px}
 #bookgrid .bk{display:flex;flex-direction:column;align-items:center;gap:5px}
 #bookgrid .bd{width:64px;height:64px;border-radius:14px;background:radial-gradient(circle at 35% 30%,var(--red2),var(--red));
@@ -63,7 +63,7 @@ button{font-family:inherit;border:none;background:none;color:inherit;cursor:poin
   transform:rotate(-3deg);box-shadow:0 3px 10px rgba(199,62,58,.35)}
 #bookgrid .bk:nth-child(even) .bd{transform:rotate(3deg)}
 #bookgrid .bd.empty{background:none;border:1.5px dashed #cbbb9b;color:transparent;box-shadow:none}
-#bookgrid .bn{font-family:var(--kanji);font-size:11px;color:#8c7b58}
+#bookgrid .bn{font-family:var(--kanji);font-size:11px;color:#6b5a3a}
 #ink{position:fixed;inset:0;z-index:65;pointer-events:none}
 #gslots .slot{width:44px;height:44px;font-size:24px;border-radius:10px}
 .slots{flex-wrap:nowrap;gap:10px}
@@ -120,7 +120,7 @@ button{font-family:inherit;border:none;background:none;color:inherit;cursor:poin
 #fragov{position:fixed;inset:0;z-index:70;display:flex;flex-direction:column;align-items:center;justify-content:center;
   background:rgba(7,6,12,.88);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);
   opacity:0;pointer-events:none;transition:opacity .5s}
-#fragov.show{opacity:1}
+#fragov.show{opacity:1;pointer-events:auto}
 #fragov .fk{font-family:var(--kanji);font-size:120px;color:var(--gold);text-shadow:0 0 40px rgba(217,179,107,.65);
   transform:scale(.4);transition:transform .9s cubic-bezier(.16,1,.3,1)}
 #fragov.show .fk{transform:scale(1)}
@@ -152,11 +152,11 @@ button{font-family:inherit;border:none;background:none;color:inherit;cursor:poin
 .route{display:flex;align-items:center;justify-content:space-between;padding:20px 20px 6px}
 .apt{text-align:center}
 .apt .code{font-size:37px;font-weight:800;letter-spacing:.02em;font-family:var(--mono)}
-.apt .city{font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:#8c7b58;margin-top:3px}
+.apt .city{font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:#6b5a3a;margin-top:3px}
 .path{flex:1;position:relative;height:2px;margin:0 12px;border-top:2px dashed #b8a276}
 .path .pl{position:absolute;top:-13px;left:50%;transform:translateX(-50%) rotate(12deg);font-size:17px;color:var(--red)}
 .pgrid{display:grid;grid-template-columns:1.4fr 1fr;gap:12px 10px;padding:16px 20px 4px}
-.pg .l{font-size:8.5px;letter-spacing:.18em;text-transform:uppercase;color:#8c7b58}
+.pg .l{font-size:8.5px;letter-spacing:.18em;text-transform:uppercase;color:#6b5a3a}
 .pg .v{font-size:13.5px;font-weight:700;margin-top:2px}
 .pg .v.mono{font-family:var(--mono);font-weight:600}
 .barcode{height:40px;margin:14px 20px 16px;border-radius:4px;
@@ -170,7 +170,7 @@ button{font-family:inherit;border:none;background:none;color:inherit;cursor:poin
 #stub.drag{transition:none}
 #stub.torn{transform:translateX(160%) rotate(14deg) !important;opacity:0}
 #stub .big{font-family:var(--mono);font-weight:800;font-size:23px}
-#stub .lbl{font-size:8.5px;letter-spacing:.2em;color:#8c7b58;text-transform:uppercase}
+#stub .lbl{font-size:8.5px;letter-spacing:.2em;color:#6b5a3a;text-transform:uppercase}
 #stub .arr{display:flex;align-items:center;gap:6px;color:var(--red);font-weight:800;font-size:19px;animation:nudge 1.6s infinite}
 @keyframes nudge{50%{transform:translateX(7px)}}
 /* ---------- class selection ---------- */
@@ -229,9 +229,9 @@ button{font-family:inherit;border:none;background:none;color:inherit;cursor:poin
 .card:nth-child(6)::before{background:radial-gradient(340px 220px at 85% -10%,rgba(130,190,235,.24),transparent 60%)}
 /* ---------- crew + P.D. ---------- */
 .crew{margin-top:16px;border-top:1px solid #d9cbab;padding-top:12px;text-align:center}
-.crew .ct2{font-size:9px;letter-spacing:.24em;text-transform:uppercase;color:#8c7b58}
+.crew .ct2{font-size:9px;letter-spacing:.24em;text-transform:uppercase;color:#6b5a3a}
 .crew .cl{font-family:var(--serif);font-size:15px;margin-top:5px;color:#3d2f1a}
-.pshint{margin-top:10px;text-align:center;font-size:10.5px;color:#7d6c49;letter-spacing:.08em}
+.pshint{margin-top:10px;text-align:center;font-size:10.5px;color:#6f5f42;letter-spacing:.08em}
 #psov{position:fixed;inset:0;z-index:75;background:rgba(7,6,12,.82);backdrop-filter:blur(8px);
   -webkit-backdrop-filter:blur(8px);display:flex;align-items:center;justify-content:center;padding:30px;
   opacity:0;pointer-events:none;transition:opacity .4s}
@@ -286,7 +286,7 @@ button{font-family:inherit;border:none;background:none;color:inherit;cursor:poin
 .cert .crest{display:flex;align-items:center;justify-content:center;gap:9px;font-family:var(--serif);
   font-weight:700;letter-spacing:.14em;font-size:14px;color:#3a2d16}
 .cert .crest .minisun{width:18px;height:18px;border-radius:50%;background:var(--red);display:flex;align-items:center;justify-content:center;font-size:10px;color:var(--gold2)}
-.cert .conf{text-align:center;font-size:9.5px;letter-spacing:.34em;text-indent:.34em;text-transform:uppercase;color:#8c7b58;margin-top:8px}
+.cert .conf{text-align:center;font-size:9.5px;letter-spacing:.34em;text-indent:.34em;text-transform:uppercase;color:#6b5a3a;margin-top:8px}
 .zor{font-family:var(--serif);font-weight:700;font-size:43px;text-align:center;margin-top:14px;color:#241c10;line-height:1.05}
 .zor i{color:var(--red)}
 .msg{font-family:var(--serif);font-style:italic;font-size:19px;text-align:center;color:#3d2f1a;margin:12px 10px 0;line-height:1.5}
@@ -301,7 +301,7 @@ button{font-family:inherit;border:none;background:none;color:inherit;cursor:poin
 .rows{margin-top:18px;border-top:1px solid #d9cbab;padding-top:14px;display:flex;flex-direction:column;gap:9px;
   position:relative;padding-right:80px}
 .row{display:flex;justify-content:space-between;align-items:baseline;gap:14px}
-.row .l{font-size:9px;letter-spacing:.2em;text-transform:uppercase;color:#8c7b58;white-space:nowrap}
+.row .l{font-size:9px;letter-spacing:.2em;text-transform:uppercase;color:#6b5a3a;white-space:nowrap}
 .row .v{font-size:13.5px;font-weight:700;text-align:right}
 .row .v.mono{font-family:var(--mono);font-weight:600}
 .hanko{position:absolute;right:-4px;top:12px;width:64px;height:64px;border-radius:12px;background:var(--red);
@@ -312,7 +312,7 @@ button{font-family:inherit;border:none;background:none;color:inherit;cursor:poin
 .contact{margin-top:16px;text-align:center;font-size:13px}
 .contact a{color:var(--red);font-weight:700;text-decoration:none}
 .contact .tel{display:block;margin-top:4px;font-family:var(--mono);font-size:12.5px;color:#3d2f1a;text-decoration:none}
-.fine{margin-top:14px;text-align:center;font-size:9.5px;color:#a08e66;letter-spacing:.04em;line-height:1.6}
+.fine{margin-top:14px;text-align:center;font-size:9.5px;color:#786946;letter-spacing:.04em;line-height:1.6}
 #petals{position:fixed;inset:0;z-index:55;pointer-events:none}
 #sndbtn{position:fixed;left:14px;bottom:calc(env(safe-area-inset-bottom) + 14px);z-index:60;
   width:44px;height:44px;border-radius:50%;background:rgba(11,10,20,.55);
@@ -368,7 +368,7 @@ body{-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility}
 @keyframes drift{from{transform:translateX(-40%)}to{transform:translateX(140%)}}
 .plbody{animation:bob 2.4s ease-in-out infinite}
 @keyframes bob{50%{transform:translateY(-3.5px)}}
-.micro{font-family:var(--mono);font-size:6.5px;letter-spacing:.26em;color:#8c7b58;opacity:.8;
+.micro{font-family:var(--mono);font-size:6.5px;letter-spacing:.26em;color:#6b5a3a;opacity:.8;
   white-space:nowrap;overflow:hidden;margin:-8px 20px 14px;text-align:center}
 .barcode{margin-bottom:10px}
 .rule{display:flex;align-items:center;gap:10px;margin-top:16px}
@@ -705,7 +705,7 @@ body{-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility}
 
 /* ═══ credits ═══ */
 .credbtn{margin:18px auto 0;display:block;font-size:11px;letter-spacing:.3em;text-indent:.3em;
-  text-transform:uppercase;color:#6f6047;padding:12px 18px;transition:.25s}
+  text-transform:uppercase;color:#6f6047;padding:15px 18px;min-height:44px;transition:.25s}
 .credbtn:active{color:var(--red)}
 #credits{background:#08070f;padding:0}
 .mangabg{position:absolute;inset:0;overflow:hidden;opacity:.5}
@@ -1186,6 +1186,7 @@ body{-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility}
 #rollin{text-shadow:0 1px 4px rgba(8,7,15,.92),0 0 14px rgba(8,7,15,.6)}
 .crby .crn{text-shadow:none}
 #sndbtn.topleft{top:calc(env(safe-area-inset-top) + 12px);bottom:auto;left:10px}
+#p9-root button{min-width:44px;min-height:44px}
 </style>
 </head>
 <body>
@@ -1844,7 +1845,7 @@ body{-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility}
   </svg>
   <div class="slots" id="gslots"></div>
   <div id="grid"></div>
-  <p class="hint" id="h10"></p>
+  <p class="hint" id="h10" data-i18n="p10_hint"></p>
 </div></section>
 
 <!-- ═══ SPLASH ═══ -->
@@ -1983,7 +1984,7 @@ body{-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility}
       <div class="cl" data-i18n="crew_2"></div>
     </div>
     <div class="contact">
-      <span class="l" style="font-size:9px;letter-spacing:.2em;text-transform:uppercase;color:#8c7b58" data-i18n="lbl_contact"></span><br>
+      <span class="l" style="font-size:9px;letter-spacing:.2em;text-transform:uppercase;color:#6b5a3a" data-i18n="lbl_contact"></span><br>
       <a href="https://evengreaterhusband.com">evengreaterhusband.com</a>
       <a class="tel" href="tel:+34691909262">+34 691 909 262</a>
     </div>
@@ -2018,7 +2019,7 @@ body{-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility}
 /* ══════════ i18n ══════════ */
 const L={
 es:{p_for:"Para Andrea",p1_hint:"Gira el anillo.\nEl rojo busca al rojo.\nTodo se alinea.",p2_hint:"Mira el cielo arder.\nLas estrellas te hablan.\nResponde en orden.",p3_hint:"Toca un farol.\nSus vecinos despiertan.\nQue ardan los cinco.",
-book_t:"Sellos del viaje",p10_h1:"Puerta cerrada.\nPide un destino y su año.\nTú ya los tienes.",p10_h2:"Nueve ganaste.\nSolo seis abren la puerta.\nEn su orden justo.",p4_hint:"Luz sin camino.\nLos espejos giran.\nLlévala al torii.",p5_hint:"La carpa te sigue.\nTres puertas de junco brillan.\nCruza en su orden.",p6_hint:"La arena cuenta.\nOndas alrededor.\nDe pocas a muchas.",p7_hint:"El tambor pregunta.\nRecuerda su latido.\nContesta igual.",p8_hint:"Puerta en piezas.\nNunca lo grande encima.\nMóntala al este.",p9_hint:"Desliza el alma.\nEmpuja cada piedra.\nEl loto espera.",cred_t:"Créditos",cred_by:"Y con",cred_end:"Fin",cred_harm:"Ningún pato de goma sufrió daños durante el rodaje.",credits:["Dirección", "Guion", "Producción ejecutiva", "Dirección creativa", "Dirección de arte", "Ingeniería", "Diseño de puzles", "Música original", "Supervisión musical", "Localización ES·CA·EU·EN", "Caligrafía", "Control de calidad", "Piloto al mando", "Tripulación de cabina", "Facturación de equipaje", "Catering de altura", "Seguridad aeroportuaria", "Objetos perdidos", "Departamento jurídico", "Efectos especiales", "Doble de acción", "Vestuario", "Fotografía de patos", "Departamento anti-cursilería"],kicker:"Vuelo privado",tagline:"La aerolínea oficial de nosotros dos",notif:"1 reserva pendiente · ANDREA ITURRALDE",cta:"Hacer check-in",
+book_t:"Sellos del viaje",p10_h1:"Puerta cerrada.\nPide un destino y su año.\nTú ya los tienes.",p10_h2:"Nueve ganaste.\nSolo seis abren la puerta.\nEn su orden justo.",p4_hint:"Luz sin camino.\nLos espejos giran.\nLlévala al torii.",p5_hint:"La carpa te sigue.\nTres puertas de junco brillan.\nCruza en su orden.",p6_hint:"La arena cuenta.\nOndas alrededor.\nDe pocas a muchas.",p7_hint:"El tambor pregunta.\nRecuerda su latido.\nContesta igual.",p8_hint:"Puerta en piezas.\nNunca lo grande encima.\nMóntala al este.",p9_hint:"Desliza el alma.\nEmpuja cada piedra.\nEl loto espera.",cred_t:"Créditos",cred_by:"Y con",cred_end:"Fin",cred_harm:"Ningún pato de goma sufrió daños durante el rodaje.",credits:["Dirección", "Guion", "Producción ejecutiva", "Dirección creativa", "Dirección de arte", "Ingeniería", "Diseño de puzles", "Música original", "Supervisión musical", "Localización ES·CA·EU·EN", "Caligrafía", "Control de calidad", "Piloto al mando", "Tripulación de cabina", "Facturación de equipaje", "Catering de altura", "Seguridad aeroportuaria", "Objetos perdidos", "Departamento jurídico", "Efectos especiales", "Doble de acción", "Vestuario", "Fotografía de patos", "Departamento anti-cursilería"],p10_hint:"Nueve sellos tuyos.\nLa libreta recuerda.\nLa puerta escucha.",kicker:"Vuelo privado",tagline:"La aerolínea oficial de nosotros dos",notif:"1 reserva pendiente · ANDREA ITURRALDE",cta:"Hacer check-in",
 pass_t:"Tarjeta de embarque",lbl_pax:"Pasajera",lbl_flight:"Vuelo",lbl_dep:"Salida",val_dep:"2027 · en cuanto tengamos curro",
 lbl_seat:"Asiento",val_seat:"1A · ventanilla, obvio",lbl_class:"Clase",val_class:"Primera ∞",lbl_gate:"Puerta",tear:"desliza",
 dest_lbl:"Destino",dest_sub:"Japón nos espera.",signs:"Las señales estaban ahí: 東 + 京",cta_itin:"Ver itinerario",
@@ -2034,7 +2035,7 @@ cta_class:"Continuar al embarque",crew_t:"Tripulación",crew_1:"Capitán: R. Roc
 ps_hint:"P.D. — toca el sello",ps_msg:"No sé si es el destino o la compañía. Mentira. Sí lo sé.",
 cards:[["Tokio","Perdernos a gusto por Shibuya"],["Monte Fuji","Madrugar solo por esta vista"],["Kioto","Mil torii en Fushimi Inari"],["Osaka","Comer hasta la ruina en Dōtonbori"],["Nara","Sobornar ciervos con galletitas"],["Hiroshima","Memoria, paz y okonomiyaki"]]},
 ca:{p_for:"Per a l'Andrea",p1_hint:"Gira l'anell, gira.\nEl roig cerca el seu roig.\nTot s'arrenglera.",p2_hint:"Mira el cel cremar.\nLes estrelles et parlen.\nRespon per ordre.",p3_hint:"Toca un fanal.\nEls veïns es desperten.\nQue cremin els cinc.",
-book_t:"Segells del viatge",p10_h1:"La porta és closa.\nVol destí i vol un any.\nTots dos són teus.",p10_h2:"Nou n'has guanyat.\nNomés sis obren la porta.\nEn l'ordre exacte.",p4_hint:"Llum sense camí.\nEls miralls giravolten.\nDuu-la al torii.",p5_hint:"La carpa et segueix.\nTres portes de jonc brillen.\nCreua-les en ordre.",p6_hint:"La sorra compta.\nOnes al voltant seu.\nDe poques a moltes.",p7_hint:"El tambor pregunta.\nRecorda el seu batec.\nContesta-li igual.",p8_hint:"Porta a trossos.\nMai el gran sobre el petit.\nMunta-la a llevant.",p9_hint:"Llisca l'espurna.\nEmpeny cada pedra.\nEl lotus espera.",cred_t:"Crèdits",cred_by:"I amb",cred_end:"Fi",cred_harm:"Cap ànec de goma no va patir danys durant el rodatge.",credits:["Direcció", "Guió", "Producció executiva", "Direcció creativa", "Direcció d'art", "Enginyeria", "Disseny de trencaclosques", "Música original", "Supervisió musical", "Localització ES·CA·EU·EN", "Cal·ligrafia", "Control de qualitat", "Pilot al comandament", "Tripulació de cabina", "Facturació d'equipatge", "Càtering d'altura", "Seguretat aeroportuària", "Objectes perduts", "Departament jurídic", "Efectes especials", "Doble d'acció", "Vestuari", "Fotografia d'ànecs", "Departament anticursileria"],kicker:"Vol privat",tagline:"La companyia aèria oficial de nosaltres dos",notif:"1 reserva pendent · ANDREA ITURRALDE",cta:"Fer check-in",
+book_t:"Segells del viatge",p10_h1:"La porta és closa.\nVol destí i vol un any.\nTots dos són teus.",p10_h2:"Nou n'has guanyat.\nNomés sis obren la porta.\nEn l'ordre exacte.",p4_hint:"Llum sense camí.\nEls miralls giravolten.\nDuu-la al torii.",p5_hint:"La carpa et segueix.\nTres portes de jonc brillen.\nCreua-les en ordre.",p6_hint:"La sorra compta.\nOnes al voltant seu.\nDe poques a moltes.",p7_hint:"El tambor pregunta.\nRecorda el seu batec.\nContesta-li igual.",p8_hint:"Porta a trossos.\nMai el gran sobre el petit.\nMunta-la a llevant.",p9_hint:"Llisca l'espurna.\nEmpeny cada pedra.\nEl lotus espera.",cred_t:"Crèdits",cred_by:"I amb",cred_end:"Fi",cred_harm:"Cap ànec de goma no va patir danys durant el rodatge.",credits:["Direcció", "Guió", "Producció executiva", "Direcció creativa", "Direcció d'art", "Enginyeria", "Disseny de trencaclosques", "Música original", "Supervisió musical", "Localització ES·CA·EU·EN", "Cal·ligrafia", "Control de qualitat", "Pilot al comandament", "Tripulació de cabina", "Facturació d'equipatge", "Càtering d'altura", "Seguretat aeroportuària", "Objectes perduts", "Departament jurídic", "Efectes especials", "Doble d'acció", "Vestuari", "Fotografia d'ànecs", "Departament anticursileria"],p10_hint:"Nou segells teus.\nLa llibreta recorda.\nLa porta escolta.",kicker:"Vol privat",tagline:"La companyia aèria oficial de nosaltres dos",notif:"1 reserva pendent · ANDREA ITURRALDE",cta:"Fer check-in",
 pass_t:"Targeta d'embarcament",lbl_pax:"Passatgera",lbl_flight:"Vol",lbl_dep:"Sortida",val_dep:"2027 · quan tinguem feina",
 lbl_seat:"Seient",val_seat:"1A · finestra, és clar",lbl_class:"Classe",val_class:"Primera ∞",lbl_gate:"Porta",tear:"arrossega",
 dest_lbl:"Destinació",dest_sub:"El Japó ens espera.",signs:"Els senyals hi eren: 東 + 京",cta_itin:"Veure itinerari",
@@ -2049,8 +2050,8 @@ perk1:"Finestra de per vida",perk2:"Equipatge emocional sense recàrrec",perk3:"
 cta_class:"Continuar a l'embarcament",crew_t:"Tripulació",crew_1:"Capità: R. Roca",crew_2:"Comandant suprema: A. Iturralde",
 ps_hint:"P.D. — toca el segell",ps_msg:"No sé si és la destinació o la companyia. Mentida. Sí que ho sé.",
 cards:[["Tòquio","Perdre'ns a gust per Shibuya"],["Mont Fuji","Matinar només per aquesta vista"],["Kyoto","Mil torii a Fushimi Inari"],["Osaka","Menjar fins a la ruïna a Dōtonbori"],["Nara","Subornar cérvols amb galetes"],["Hiroshima","Memòria, pau i okonomiyaki"]]},
-eu:{p_for:"Andrearentzat",p1_hint:"Biratu geldi.\nGorriak gorria du\nbila gauean.",p2_hint:"Zerua begira.\nIzarrek hitz egiten.\nOrdenan erantzun.",p3_hint:"Ukitu argia.\nAuzokoak esnatzen.\nBost piztu arte.",
-book_t:"Bidaiaren zigiluak",p10_h1:"Atea itxita.\nHelmuga eta urtea.\nBiak zeureak.",p10_h2:"Bederatzi lortu.\nSeik bakarrik irekitzen.\nIrabazi-ordenan.",p4_hint:"Argia galduta.\nIspiluak biratu.\nToriira eraman.",p5_hint:"Arraina atzetik.\nHiru ate distira.\nOrdenan zeharka.",p6_hint:"Hareak zenbatzen.\nUhinak harri-bueltan.\nGutxitik gehira.",p7_hint:"Danborrak galde.\nGogoratu taupada.\nBerdin erantzun.",p8_hint:"Atea zatika.\nHandia ez txiki gainean.\nEkialdean josi.",p9_hint:"Sua lerratu.\nHarri bakoitza bultza.\nLotoa zain dago.",cred_t:"Kredituak",cred_by:"Eta",cred_end:"Amaiera",cred_harm:"Gomazko ahaterik ez da kaltetu grabazioan.",credits:["Zuzendaritza", "Gidoia", "Produkzio exekutiboa", "Sormen-zuzendaritza", "Arte-zuzendaritza", "Ingeniaritza", "Puzzle-diseinua", "Jatorrizko musika", "Musika-gainbegiratzea", "Lokalizazioa ES·CA·EU·EN", "Kaligrafia", "Kalitate-kontrola", "Pilotu nagusia", "Kabinako tripulazioa", "Ekipaje-fakturazioa", "Goi-mailako cateringa", "Aireportuko segurtasuna", "Galdutako objektuak", "Zuzenbide-saila", "Efektu bereziak", "Akzio-bikoitza", "Jantziak", "Ahate-argazkilaritza", "Cursikeriaren aurkako saila"],kicker:"Hegaldi pribatua",tagline:"Gu bion aire-konpainia ofiziala",notif:"Erreserba 1 zain · ANDREA ITURRALDE",cta:"Check-in egin",
+eu:{p_for:"Andrearentzat",p1_hint:"Biratu geldi.\nGorriak gorria\nbilatzen du gauean.",p2_hint:"Zerura begira.\nIzarrek hitz egiten.\nOrdenan erantzun.",p3_hint:"Ukitu argia.\nAuzokoak esnatzen.\nBost piztu arte.",
+book_t:"Bidaiaren zigiluak",p10_h1:"Atea itxita.\nHelmuga eta urtea.\nBiak zeureak.",p10_h2:"Bederatzi lortu.\nSeik bakarrik irekitzen.\nIrabazi-ordenan.",p4_hint:"Argia galduta.\nIspiluak biratu.\nToriira eraman.",p5_hint:"Arraina atzetik.\nHiru ate distira.\nOrdenan zeharka.",p6_hint:"Hareak zenbatzen.\nUhinak harri-bueltan.\nGutxitik gehira.",p7_hint:"Danborrak galde.\nGogoratu taupada.\nBerdin erantzun.",p8_hint:"Atea zatika.\nHandia ez txiki gainean.\nEkialdean josi.",p9_hint:"Sua lerratu.\nHarri bakoitza bultza.\nLotoa zain dago.",cred_t:"Kredituak",cred_by:"Eta",cred_end:"Amaiera",cred_harm:"Gomazko ahaterik ez da kaltetu grabazioan.",credits:["Zuzendaritza", "Gidoia", "Produkzio exekutiboa", "Sormen-zuzendaritza", "Arte-zuzendaritza", "Ingeniaritza", "Puzzle-diseinua", "Jatorrizko musika", "Musika-gainbegiratzea", "Lokalizazioa ES·CA·EU·EN", "Kaligrafia", "Kalitate-kontrola", "Pilotu nagusia", "Kabinako tripulazioa", "Ekipaje-fakturazioa", "Goi-mailako cateringa", "Aireportuko segurtasuna", "Galdutako objektuak", "Zuzenbide-saila", "Efektu bereziak", "Ekintza bikoitza", "Jantziak", "Ahate-argazkilaritza", "Cursikeriaren aurkako saila"],p10_hint:"Bederatzi zigilu.\nKoadernoak gogoan du.\nAteak entzuten du.",kicker:"Hegaldi pribatua",tagline:"Gu bion aire-konpainia ofiziala",notif:"Erreserba 1 zain · ANDREA ITURRALDE",cta:"Check-in egin",
 pass_t:"Ontziratze-txartela",lbl_pax:"Bidaiaria",lbl_flight:"Hegaldia",lbl_dep:"Irteera",val_dep:"2027 · lana dugunean",
 lbl_seat:"Eserlekua",val_seat:"1A · leiho ondoan, noski",lbl_class:"Klasea",val_class:"Lehen ∞",lbl_gate:"Atea",tear:"arrastatu",
 dest_lbl:"Helmuga",dest_sub:"Japonia gure zain dago.",signs:"Seinaleak hor zeuden: 東 + 京",cta_itin:"Ibilbidea ikusi",
@@ -2066,7 +2067,7 @@ cta_class:"Ontziratzera jarraitu",crew_t:"Tripulazioa",crew_1:"Kapitaina: R. Roc
 ps_hint:"P.D. — ukitu zigilua",ps_msg:"Ez dakit helmuga den ala konpainia. Gezurra. Badakit.",
 cards:[["Tokio","Shibuyan gustura galdu"],["Fuji mendia","Goiz jaiki bista honengatik"],["Kioto","Mila torii Fushimi Inarin"],["Osaka","Dōtonborin jan eta jan"],["Nara","Oreinak gailetekin limurtu"],["Hiroshima","Memoria, bakea eta okonomiyakia"]]},
 en:{p_for:"For Andrea",p1_hint:"Turn the quiet rings.\nRed is searching for its red.\nAll things come to rest.",p2_hint:"Watch the burning sky.\nThe stars speak in a sequence.\nAnswer them in turn.",p3_hint:"Touch one lantern, soft.\nIts neighbors wake beside it.\nLet all five burn gold.",
-book_t:"Seals of the journey",p10_h1:"The gate stays silent.\nIt wants a place and a year.\nBoth already yours.",p10_h2:"You earned nine red seals.\nOnly six unlock the gate.\nThe order you won.",p4_hint:"Light without a road.\nThe bronze mirrors turn for you.\nGuide it to the gate.",p5_hint:"The koi trusts your hand.\nThree reed gates wake in the dark.\nPass them one by one.",p6_hint:"The raked sand can count.\nRings around each sleeping stone.\nFewest first, then more.",p7_hint:"The drum asks you first.\nRemember its heartbeat well.\nAnswer it in kind.",p8_hint:"A gate in pieces.\nThe great must not crush the small.\nRebuild it eastward.",p9_hint:"Swipe — the flame obeys.\nPush each stone across the stars.\nA lotus awaits.",cred_t:"Credits",cred_by:"And featuring",cred_end:"The End",cred_harm:"No rubber ducks were harmed in the making.",credits:["Directed by", "Screenplay", "Executive producer", "Creative director", "Art direction", "Engineering", "Puzzle design", "Original score", "Music supervision", "Localization ES·CA·EU·EN", "Calligraphy", "Quality control", "Pilot in command", "Cabin crew", "Baggage handling", "High-altitude catering", "Airport security", "Lost & found", "Legal department", "Special effects", "Stunt double", "Costume design", "Duck photography", "Anti-cheese department"],kicker:"Private flight",tagline:"The official airline of us two",notif:"1 pending booking · ANDREA ITURRALDE",cta:"Check in",
+book_t:"Seals of the journey",p10_h1:"The gate stays silent.\nIt wants a place and a year.\nBoth already yours.",p10_h2:"You earned nine red seals.\nOnly six unlock the gate.\nThe order you won.",p4_hint:"Light without a road.\nThe bronze mirrors turn for you.\nGuide it to the gate.",p5_hint:"The koi trusts your hand.\nThree reed gates wake in the dark.\nPass them one by one.",p6_hint:"The raked sand can count.\nRings around each sleeping stone.\nFewest first, then more.",p7_hint:"The drum asks you first.\nRemember its heartbeat well.\nAnswer it in kind.",p8_hint:"A gate in pieces.\nThe great must not crush the small.\nRebuild it eastward.",p9_hint:"Swipe — the flame obeys.\nPush each stone across the stars.\nA lotus awaits.",cred_t:"Credits",cred_by:"And featuring",cred_end:"The End",cred_harm:"No rubber ducks were harmed in the making.",credits:["Directed by", "Screenplay", "Executive producer", "Creative director", "Art direction", "Engineering", "Puzzle design", "Original score", "Music supervision", "Localization ES·CA·EU·EN", "Calligraphy", "Quality control", "Pilot in command", "Cabin crew", "Baggage handling", "High-altitude catering", "Airport security", "Lost & found", "Legal department", "Special effects", "Stunt double", "Costume design", "Duck photography", "Anti-cheese department"],p10_hint:"Nine seals are yours.\nThe little book remembers.\nThe gate is listening.",kicker:"Private flight",tagline:"The official airline of us two",notif:"1 pending booking · ANDREA ITURRALDE",cta:"Check in",
 pass_t:"Boarding pass",lbl_pax:"Passenger",lbl_flight:"Flight",lbl_dep:"Departure",val_dep:"2027 · as soon as we're employed",
 lbl_seat:"Seat",val_seat:"1A · window, obviously",lbl_class:"Class",val_class:"First ∞",lbl_gate:"Gate",tear:"slide",
 dest_lbl:"Destination",dest_sub:"Japan is waiting for us.",signs:"The signs were there: 東 + 京",cta_itin:"See itinerary",
@@ -2145,6 +2146,7 @@ document.getElementById('bookov').addEventListener('click',()=>
 let curScr='g1';
 function go(id){
   const pm=curScr.match(/^g(\d+)$/);const pn=pm?+pm[1]:0;
+  if(pn===2){try{clearT();document.querySelectorAll('#skystage .star.flare').forEach(s=>s.classList.remove('flare'))}catch(e){}}
   if(pn>=3&&pn<=9){try{PUZZLES[pn]&&PUZZLES[pn].cleanup&&PUZZLES[pn].cleanup()}catch(e){}}
   curScr=id;
   document.querySelectorAll('.screen').forEach(s=>s.classList.toggle('active',s.id===id));
@@ -2170,7 +2172,7 @@ function inkRes(){inkC.width=innerWidth*DPRI;inkC.height=innerHeight*DPRI;
   inkC.style.width=innerWidth+'px';inkC.style.height=innerHeight+'px';}
 const DPRI=Math.min(window.devicePixelRatio||1,2);
 inkRes();addEventListener('resize',inkRes);
-function inkTo(id){const W=inkC.width,H=inkC.height,T0=performance.now(),DUR=760;let swapped=false;
+function inkTo(id){inkC.style.pointerEvents='auto';const W=inkC.width,H=inkC.height,T0=performance.now(),DUR=760;let swapped=false;
   const blobs=Array.from({length:7},(_,i)=>({x:W*(.2+.6*((i*53%97)/97)),y:H*(.15+.7*((i*71%89)/89)),
     v:(.9+((i*37%13)/13)*.9)*Math.max(W,H)/900}));
   (function f(t){const el=t-T0,p=el/DUR;
@@ -2182,7 +2184,7 @@ function inkTo(id){const W=inkC.width,H=inkC.height,T0=performance.now(),DUR=760
           inkX.fillStyle='#0b0a14';inkX.beginPath();inkX.arc(b.x,b.y,r*(1+.13*(3-k)),0,6.28);inkX.fill();}});
       if(p>.5&&!swapped){swapped=true;go(id);}
       requestAnimationFrame(f);}
-    else{inkX.clearRect(0,0,W,H);inkX.globalAlpha=1;if(!swapped)go(id);}
+    else{inkX.clearRect(0,0,W,H);inkX.globalAlpha=1;inkC.style.pointerEvents='none';if(!swapped)go(id);}
   })(T0);}
 /* hints appear after 14s per puzzle */
 let hintTimers={};
@@ -2268,7 +2270,7 @@ function tapGate(t,k){if(gdone||t.classList.contains('picked'))return;
     const h=document.getElementById('h10');
     if(gfails>=4){h.textContent=L[lang].p10_h2;h.classList.add('show')}
     else if(gfails>=2){h.textContent=L[lang].p10_h1;h.classList.add('show')}
-    setTimeout(()=>{g.classList.remove('shake');buildGate()},560);}}
+    setTimeout(()=>g.classList.remove('shake'),560);}}
 /* ══════════ boarding pass tear ══════════ */
 const stub=document.getElementById('stub');let sx=0,dx=0,dragging=false,torn=false;
 stub.addEventListener('pointerdown',e=>{if(torn)return;dragging=true;sx=e.clientX;dx=0;
@@ -2302,7 +2304,7 @@ function arcD(a,b,k){const mx=(a[0]+b[0])/2,my=(a[1]+b[1])/2,dx=b[0]-a[0],dy=b[1
     const p=document.createElementNS(NS,'path');p.setAttribute('d',arcD(a,b,.22));
     p.setAttribute('class','rseg');p.dataset.i=i;rs.appendChild(p);
     const t=document.createElementNS(NS,'text');t.setAttribute('class','kml');
-    const KLBL=[[269,168],[222,146],[222,182],[222,190],[185,199]];
+    const KLBL=[[269,168],[222,146],[222,182],[222,190],[172,207]];
     t.setAttribute('x',KLBL[i][0]);t.setAttribute('y',KLBL[i][1]);t.textContent=KMS[i]+' km';rs.appendChild(t);}
   const ba=document.getElementById('bcnarc');
   const bp=document.createElementNS(NS,'path');bp.setAttribute('class','bcn');
