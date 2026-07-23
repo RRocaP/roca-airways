@@ -2382,14 +2382,15 @@ document.getElementById('cert').addEventListener('pointerdown',e=>{
   for(let i=0;i<14;i++)addPetal(e.clientX*DPR,e.clientY*DPR,true);buzz(10);});
 /* ══════════ music ══════════ */
 const au=new Audio('music.mp3');au.loop=true;au.preload='auto';au.volume=0;
-const sbtn=document.getElementById('sndbtn');let sndState=null,fadeT=null;
+const sbtn=document.getElementById('sndbtn');let sndState=null;
 au.addEventListener('error',()=>sbtn.classList.add('hidden'));
-function fadeTo(v){clearInterval(fadeT);fadeT=setInterval(()=>{
-  const d=v-au.volume;if(Math.abs(d)<.03){au.volume=v;clearInterval(fadeT);if(v===0)au.pause();return}
-  au.volume+=d*.12;},60);}
 function sndOn(){sndState=true;sbtn.classList.remove('off');
-  au.play().then(()=>fadeTo(.55)).catch(()=>{});}
-function sndOff(){sndState=false;sbtn.classList.add('off');fadeTo(0);}
+  const inCred=(typeof curScr!=='undefined'&&curScr==='credits'&&typeof auC!=='undefined'&&auC);
+  const t=inCred?auC:au, o=inCred?au:(typeof auC!=='undefined'?auC:null);
+  if(o){fadeA(o,0)}
+  t.play().then(()=>fadeA(t,.55)).catch(()=>{});}
+function sndOff(){sndState=false;sbtn.classList.add('off');
+  fadeA(au,0);if(typeof auC!=='undefined'&&auC)fadeA(auC,0);}
 sbtn.addEventListener('click',e=>{e.stopPropagation();sndState?sndOff():sndOn();});
 document.addEventListener('pointerdown',function autoSnd(e){
   if(e.target.closest('#sndbtn'))return;
@@ -2431,14 +2432,14 @@ function buildCredits(){const r=document.getElementById('rollin');if(!r)return;
 document.getElementById('bCred').addEventListener('click',()=>{SFX.tick();
  go('credits');buildCredits();
  const r=document.getElementById('rollin');r.classList.remove('rolling');void r.offsetWidth;r.classList.add('rolling');
- fadeA(au,0);
+ fadeA(au,0);setTimeout(()=>{if(curScr==='credits'&&!au.paused){au.pause();au.volume=0}},1900);
  if(!auC){auC=new Audio('credits.mp3');auC.loop=true;auC.volume=0;}
  if(sndState!==false){auC.play().then(()=>fadeA(auC,.55)).catch(()=>{});}
  mode='dust';clearInterval(rainT);rainT=setInterval(spawnRain,2100);spawnRain();});
 document.getElementById('credX').addEventListener('click',()=>{SFX.tick();
  clearInterval(rainT);rainT=null;
  const rl=document.getElementById('rainlayer');while(rl.firstChild)rl.firstChild.remove();
- fadeA(auC,0);
+ fadeA(auC,0);setTimeout(()=>{if(curScr!=='credits'&&auC&&!auC.paused){auC.pause();auC.volume=0}},1900);
  if(sndState){au.play().then(()=>fadeA(au,.55)).catch(()=>{});}
  mode='petals';go('cert');});
 /* ══════════ init ══════════ */
