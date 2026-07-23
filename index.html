@@ -788,7 +788,7 @@ function addPetal(x,y,burst){pts.push({x:x??Math.random()*PW,y:y??-30,
   sw:Math.random()*6.28,o:.45+Math.random()*.45,b:!!burst});}
 function petLoop(){cx2.clearRect(0,0,PW,PH);
   pts=pts.filter(p=>p.y<PH+40&&p.o>0);
-  if(petON&&pts.filter(p=>!p.b).length<26&&Math.random()<.2)addPetal();
+  if(petON&&pts.filter(p=>!p.b).length<44&&Math.random()<.34)addPetal();
   pts.forEach(p=>{p.sw+=.018;p.x+=p.vx+Math.sin(p.sw)*.7*DPR;p.y+=p.vy;p.a+=p.va;
     if(p.b){p.vy+=.12*DPR;p.o-=.008}
     cx2.save();cx2.translate(p.x,p.y);cx2.rotate(p.a);cx2.globalAlpha=Math.max(0,p.o);
