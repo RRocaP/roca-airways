@@ -1,0 +1,822 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no">
+<meta name="theme-color" content="#0b0a14">
+<meta property="og:title" content="ROCA AIRWAYS · RA-2027">
+<meta property="og:description" content="1 reserva pendiente · A. Iturralde">
+<title>ROCA AIRWAYS · RA-2027</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,500&family=Zen+Old+Mincho:wght@700;900&display=swap');
+:root{
+  --ink:#0b0a14; --ink2:#151021; --gold:#d9b36b; --gold2:#f0d9a8; --gold3:#8a713f;
+  --red:#c73e3a; --red2:#e05a52; --paper:#f6efe3; --paper2:#efe5d2;
+  --pink:#f2b8c6; --violet:#241a3d; --sans:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  --serif:'Cormorant Garamond',Georgia,serif; --kanji:'Zen Old Mincho','Hiragino Mincho ProN',serif;
+  --mono:ui-monospace,'SF Mono',SFMono-Regular,Menlo,monospace;
+}
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{height:100%}
+body{background:var(--ink);color:var(--paper);font-family:var(--sans);overflow:hidden;
+  background-image:radial-gradient(1200px 800px at 50% -10%, #1a1330 0%, var(--ink) 55%)}
+button{font-family:inherit;border:none;background:none;color:inherit;cursor:pointer}
+/* ---------- screens ---------- */
+.screen{position:fixed;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;
+  padding:calc(env(safe-area-inset-top) + 18px) 22px calc(env(safe-area-inset-bottom) + 26px);
+  opacity:0;pointer-events:none;transform:translateY(14px) scale(.985);
+  transition:opacity .55s ease,transform .55s cubic-bezier(.2,.8,.2,1);overflow-y:auto;overscroll-behavior:contain}
+.screen.active{opacity:1;pointer-events:auto;transform:none}
+.inner{width:100%;max-width:430px;display:flex;flex-direction:column;align-items:center}
+/* ---------- chrome ---------- */
+#langs{position:fixed;top:calc(env(safe-area-inset-top) + 10px);right:12px;z-index:60;display:flex;gap:4px;
+  background:rgba(11,10,20,.55);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);
+  border:1px solid rgba(217,179,107,.25);border-radius:99px;padding:3px}
+#langs button{font-size:10px;letter-spacing:.08em;font-weight:600;color:rgba(246,239,227,.55);
+  padding:5px 8px;border-radius:99px;transition:.25s}
+#langs button.on{background:var(--gold);color:var(--ink)}
+#prog{position:fixed;top:calc(env(safe-area-inset-top) + 14px);left:16px;z-index:60;display:flex;gap:10px;
+  font-family:var(--kanji);font-size:13px;color:rgba(217,179,107,.28);transition:opacity .4s}
+#prog span.done{color:var(--gold);text-shadow:0 0 12px rgba(217,179,107,.6)}
+#prog.hidden{opacity:0}
+.kicker{font-size:11px;letter-spacing:.42em;text-indent:.42em;color:var(--gold);text-transform:uppercase;opacity:.9}
+.hint{font-size:13px;color:rgba(246,239,227,.5);letter-spacing:.04em;text-align:center;min-height:18px;
+  opacity:0;transition:opacity 1s}
+.hint.show{opacity:1}
+.btn{margin-top:26px;background:linear-gradient(180deg,var(--gold2),var(--gold));color:#1c1408;
+  font-weight:700;font-size:15px;letter-spacing:.06em;padding:15px 34px;border-radius:99px;
+  box-shadow:0 6px 24px rgba(217,179,107,.28), inset 0 1px 0 rgba(255,255,255,.5);
+  transition:transform .15s}
+.btn:active{transform:scale(.96)}
+.ghost{margin-top:14px;color:rgba(246,239,227,.45);font-size:12px;letter-spacing:.14em}
+/* ---------- puzzle 1 : seal ---------- */
+#p1svg{width:min(78vw,330px);height:auto;touch-action:none;user-select:none;-webkit-user-select:none;
+  filter:drop-shadow(0 0 26px rgba(199,62,58,.12))}
+#p1svg.solved{filter:drop-shadow(0 0 34px rgba(217,179,107,.55));transition:filter .8s}
+#p1svg g.ring{transform-origin:170px 170px}
+.forname{font-family:var(--serif);font-style:italic;font-size:20px;color:rgba(246,239,227,.75);margin-bottom:26px;letter-spacing:.06em}
+/* ---------- puzzle 2 : stars ---------- */
+#skystage{position:relative;width:min(88vw,380px);height:min(62vh,470px);touch-action:manipulation}
+.star{position:absolute;width:44px;height:44px;margin:-22px 0 0 -22px;display:flex;align-items:center;justify-content:center;
+  transition:transform .3s}
+.star svg{width:22px;height:22px;opacity:.45;transition:.3s;filter:drop-shadow(0 0 6px rgba(240,217,168,.5))}
+.star.flare svg{opacity:1;transform:scale(1.75);filter:drop-shadow(0 0 16px var(--gold2))}
+.star.lit svg{opacity:1;transform:scale(1.3);filter:drop-shadow(0 0 14px var(--gold2))}
+.speck{position:absolute;width:3px;height:3px;border-radius:50%;background:rgba(246,239,227,.35)}
+#lines{position:absolute;inset:0;width:100%;height:100%;pointer-events:none}
+#lines line{stroke:var(--gold);stroke-width:1.6;stroke-linecap:round;opacity:.9;
+  stroke-dasharray:400;stroke-dashoffset:400;animation:draw .7s forwards}
+@keyframes draw{to{stroke-dashoffset:0}}
+.shake{animation:shk .5s}
+@keyframes shk{0%,100%{transform:translateX(0)}20%{transform:translateX(-9px)}40%{transform:translateX(8px)}60%{transform:translateX(-6px)}80%{transform:translateX(4px)}}
+/* ---------- puzzle 3 : gate ---------- */
+#gate{width:min(64vw,250px);height:auto;margin-bottom:8px;transition:filter .8s}
+#gate.open{filter:drop-shadow(0 0 30px rgba(199,62,58,.75))}
+.slots{display:flex;gap:18px;margin:2px 0 22px}
+.slot{width:52px;height:52px;border:1.5px dashed rgba(217,179,107,.5);border-radius:12px;
+  display:flex;align-items:center;justify-content:center;font-family:var(--kanji);font-size:30px;color:var(--gold);
+  background:rgba(217,179,107,.05);transition:.4s}
+.slot.filled{border-style:solid;border-color:var(--gold);background:rgba(217,179,107,.14);
+  box-shadow:0 0 18px rgba(217,179,107,.35);text-shadow:0 0 10px rgba(240,217,168,.8)}
+#grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;width:min(80vw,300px);touch-action:manipulation}
+.tile{aspect-ratio:1;border-radius:14px;background:linear-gradient(160deg,#1d1530,#120d1f);
+  border:1px solid rgba(217,179,107,.28);font-family:var(--kanji);font-size:34px;color:var(--gold);
+  display:flex;align-items:center;justify-content:center;box-shadow:0 4px 14px rgba(0,0,0,.45), inset 0 1px 0 rgba(246,239,227,.06);
+  transition:transform .15s,opacity .4s,border-color .3s}
+.tile:active{transform:scale(.93)}
+.tile.picked{opacity:0;pointer-events:none;transform:scale(.4) translateY(-40px)}
+#flash{position:fixed;inset:0;background:#fff;opacity:0;pointer-events:none;z-index:80;transition:opacity .5s}
+/* ---------- fragment overlay ---------- */
+#fragov{position:fixed;inset:0;z-index:70;display:flex;flex-direction:column;align-items:center;justify-content:center;
+  background:rgba(7,6,12,.88);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);
+  opacity:0;pointer-events:none;transition:opacity .5s}
+#fragov.show{opacity:1}
+#fragov .fk{font-family:var(--kanji);font-size:120px;color:var(--gold);text-shadow:0 0 40px rgba(217,179,107,.65);
+  transform:scale(.4);transition:transform .9s cubic-bezier(.16,1,.3,1)}
+#fragov.show .fk{transform:scale(1)}
+#fragov .fl{margin-top:10px;font-size:11px;letter-spacing:.4em;text-indent:.4em;color:rgba(246,239,227,.5);text-transform:uppercase}
+/* ---------- splash ---------- */
+.mark{position:relative;width:86px;height:86px;margin-bottom:22px}
+.mark .sun{position:absolute;inset:0;border-radius:50%;background:radial-gradient(circle at 38% 32%,var(--red2),var(--red));
+  box-shadow:0 0 34px rgba(199,62,58,.5)}
+.mark .plane{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;
+  font-size:44px;color:var(--gold2);transform:rotate(-22deg);text-shadow:0 2px 10px rgba(0,0,0,.4)}
+.brand{font-family:var(--serif);font-weight:700;font-size:44px;letter-spacing:.14em;text-indent:.14em;color:var(--paper);line-height:1}
+.brand b{color:var(--gold);font-weight:700}
+.tagline{margin-top:10px;font-family:var(--serif);font-style:italic;font-size:17px;color:rgba(246,239,227,.66)}
+.notif{margin-top:30px;display:flex;align-items:center;gap:10px;background:rgba(246,239,227,.06);
+  border:1px solid rgba(217,179,107,.3);border-radius:14px;padding:13px 18px;font-size:13px;letter-spacing:.05em}
+.notif .dot{width:8px;height:8px;border-radius:50%;background:var(--red2);box-shadow:0 0 10px var(--red2);animation:pulse 1.6s infinite}
+@keyframes pulse{50%{opacity:.35}}
+/* ---------- boarding pass ---------- */
+.ptitle{font-size:11px;letter-spacing:.38em;text-indent:.38em;color:var(--gold);text-transform:uppercase;margin-bottom:18px}
+.pass{width:100%;max-width:400px;background:linear-gradient(175deg,var(--paper),var(--paper2));color:#241c10;
+  border-radius:20px;box-shadow:0 18px 50px rgba(0,0,0,.55);overflow:hidden;
+  transition:transform .6s,opacity .6s}
+.pass.lift{transform:translateY(-30px) scale(1.02);opacity:0}
+.phead{display:flex;align-items:center;justify-content:space-between;padding:14px 18px;
+  background:linear-gradient(90deg,#181022,#2a1638);color:var(--paper)}
+.phead .pb{display:flex;align-items:center;gap:9px;font-family:var(--serif);font-weight:700;letter-spacing:.12em;font-size:15px}
+.phead .minisun{width:20px;height:20px;border-radius:50%;background:var(--red);display:flex;align-items:center;justify-content:center;font-size:11px;color:var(--gold2)}
+.chip{font-size:9px;letter-spacing:.18em;color:var(--gold);border:1px solid rgba(217,179,107,.5);border-radius:99px;padding:4px 9px}
+.route{display:flex;align-items:center;justify-content:space-between;padding:20px 20px 6px}
+.apt{text-align:center}
+.apt .code{font-size:37px;font-weight:800;letter-spacing:.02em;font-family:var(--mono)}
+.apt .city{font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:#8c7b58;margin-top:3px}
+.path{flex:1;position:relative;height:2px;margin:0 12px;border-top:2px dashed #b8a276}
+.path .pl{position:absolute;top:-13px;left:50%;transform:translateX(-50%) rotate(12deg);font-size:17px;color:var(--red)}
+.pgrid{display:grid;grid-template-columns:1.4fr 1fr;gap:12px 10px;padding:16px 20px 4px}
+.pg .l{font-size:8.5px;letter-spacing:.18em;text-transform:uppercase;color:#8c7b58}
+.pg .v{font-size:13.5px;font-weight:700;margin-top:2px}
+.pg .v.mono{font-family:var(--mono);font-weight:600}
+.barcode{height:40px;margin:14px 20px 16px;border-radius:4px;
+  background:repeating-linear-gradient(90deg,#241c10 0 2px,transparent 2px 5px,#241c10 5px 6px,transparent 6px 10px,#241c10 10px 13px,transparent 13px 15px)}
+.stubwrap{position:relative}
+.stubwrap::before{content:"";position:absolute;top:-1px;left:0;right:0;border-top:2px dashed #c9b489}
+.stubwrap::after{content:"";position:absolute;top:-11px;left:-11px;width:22px;height:22px;border-radius:50%;background:var(--ink)}
+.stubwrap .n2{position:absolute;top:-11px;right:-11px;width:22px;height:22px;border-radius:50%;background:var(--ink)}
+#stub{display:flex;align-items:center;justify-content:space-between;padding:16px 20px;background:var(--paper2);
+  touch-action:none;user-select:none;-webkit-user-select:none;transition:transform .4s cubic-bezier(.2,.8,.2,1),opacity .4s}
+#stub.drag{transition:none}
+#stub.torn{transform:translateX(160%) rotate(14deg) !important;opacity:0}
+#stub .big{font-family:var(--mono);font-weight:800;font-size:23px}
+#stub .lbl{font-size:8.5px;letter-spacing:.2em;color:#8c7b58;text-transform:uppercase}
+#stub .arr{display:flex;align-items:center;gap:6px;color:var(--red);font-weight:800;font-size:19px;animation:nudge 1.6s infinite}
+@keyframes nudge{50%{transform:translateX(7px)}}
+/* ---------- class selection ---------- */
+.clscard{width:100%;max-width:400px;border-radius:18px;padding:18px 20px;margin-top:12px;position:relative;
+  border:1px solid rgba(217,179,107,.22);background:linear-gradient(165deg,#191225,#100c1a);
+  display:flex;align-items:center;justify-content:space-between;gap:12px;overflow:hidden;transition:transform .15s}
+.clscard .cn{font-family:var(--serif);font-weight:700;font-size:22px}
+.clscard .cp{font-family:var(--mono);font-size:12.5px;color:rgba(246,239,227,.55);margin-top:3px}
+.clscard.dead{opacity:.55;filter:saturate(.4)}
+.clscard.dead::after{content:attr(data-sold);position:absolute;right:-34px;top:12px;transform:rotate(18deg);
+  background:var(--red);color:#fff;font-size:9px;letter-spacing:.22em;padding:4px 40px;text-transform:uppercase}
+.clscard.gold{border:1.5px solid var(--gold);background:linear-gradient(165deg,#2a2036,#161022);
+  box-shadow:0 0 30px rgba(217,179,107,.22)}
+.clscard.gold .cn{color:var(--gold2)}
+.clscard .tick{width:26px;height:26px;border-radius:50%;background:var(--gold);color:#1c1408;font-weight:800;
+  display:flex;align-items:center;justify-content:center;font-size:15px;flex:none}
+.foryou{font-size:11px;letter-spacing:.14em;color:var(--gold);text-transform:uppercase;margin-top:8px}
+.perks{width:100%;max-width:400px;margin-top:18px;display:flex;flex-direction:column;gap:8px}
+.perk{display:flex;gap:10px;align-items:baseline;font-size:13.5px;color:rgba(246,239,227,.75)}
+.perk::before{content:"◆";color:var(--gold);font-size:8px}
+/* ---------- japan map ---------- */
+#jmap{width:min(94vw,430px);height:auto;margin:6px 0 0}
+#jmap .land{fill:#1d1531;stroke:rgba(217,179,107,.45);stroke-width:1.2}
+#jmap .route{fill:none;stroke:rgba(224,90,82,.75);stroke-width:2;stroke-dasharray:5 6;stroke-linecap:round;
+  animation:routedash 20s linear infinite}
+@keyframes routedash{to{stroke-dashoffset:-440}}
+#jmap circle.city{fill:#493a5e;stroke:rgba(217,179,107,.6);stroke-width:1.4;transition:.3s}
+#jmap circle.city.on{fill:var(--red2);stroke:var(--gold2);filter:drop-shadow(0 0 7px rgba(224,90,82,.9))}
+#jmap text{fill:rgba(246,239,227,.55);font-size:9.5px;font-family:var(--mono);letter-spacing:.05em;text-anchor:middle;transition:.3s}
+#jmap text.on{fill:var(--gold2)}
+#jplane{transition:transform .9s cubic-bezier(.45,.05,.35,1)}
+/* ---------- pass sheen ---------- */
+.pass{position:relative}
+.pass::after{content:"";position:absolute;inset:0;pointer-events:none;border-radius:20px;
+  background:linear-gradient(115deg,transparent 30%,rgba(255,255,255,.16) 45%,rgba(240,217,168,.22) 50%,rgba(255,255,255,.16) 55%,transparent 70%);
+  background-size:260% 100%;animation:sheen 4.2s ease-in-out infinite}
+@keyframes sheen{0%,55%{background-position:130% 0}100%{background-position:-130% 0}}
+/* ---------- card accents ---------- */
+.card::before{content:"";position:absolute;inset:0;pointer-events:none;opacity:.5}
+.card:nth-child(1)::before{background:radial-gradient(340px 200px at 85% -10%,rgba(233,84,152,.28),transparent 60%),radial-gradient(240px 160px at -10% 110%,rgba(64,120,230,.18),transparent 60%)}
+.card:nth-child(2)::before{background:radial-gradient(340px 220px at 80% -10%,rgba(150,160,255,.22),transparent 60%),radial-gradient(240px 160px at 10% 115%,rgba(240,240,255,.10),transparent 55%)}
+.card:nth-child(3)::before{background:radial-gradient(340px 220px at 85% -10%,rgba(224,90,82,.30),transparent 60%)}
+.card:nth-child(4)::before{background:radial-gradient(340px 220px at 85% -10%,rgba(255,170,60,.26),transparent 60%)}
+.card:nth-child(5)::before{background:radial-gradient(340px 220px at 85% -10%,rgba(120,200,130,.24),transparent 60%)}
+.card:nth-child(6)::before{background:radial-gradient(340px 220px at 85% -10%,rgba(130,190,235,.24),transparent 60%)}
+/* ---------- crew + P.D. ---------- */
+.crew{margin-top:16px;border-top:1px solid #d9cbab;padding-top:12px;text-align:center}
+.crew .ct2{font-size:9px;letter-spacing:.24em;text-transform:uppercase;color:#8c7b58}
+.crew .cl{font-family:var(--serif);font-size:15px;margin-top:5px;color:#3d2f1a}
+.pshint{margin-top:10px;text-align:center;font-size:10.5px;color:#a08e66;letter-spacing:.08em}
+#psov{position:fixed;inset:0;z-index:75;background:rgba(7,6,12,.82);backdrop-filter:blur(8px);
+  -webkit-backdrop-filter:blur(8px);display:flex;align-items:center;justify-content:center;padding:30px;
+  opacity:0;pointer-events:none;transition:opacity .4s}
+#psov.show{opacity:1;pointer-events:auto}
+#psov .letter{background:linear-gradient(175deg,var(--paper),var(--paper2));color:#241c10;border-radius:16px;
+  padding:30px 26px;max-width:340px;box-shadow:0 20px 60px rgba(0,0,0,.6);transform:scale(.92);transition:transform .4s}
+#psov.show .letter{transform:scale(1)}
+#psov .pst{font-family:var(--serif);font-style:italic;font-size:15px;letter-spacing:.1em;color:var(--red)}
+#psov .psm{font-family:var(--serif);font-style:italic;font-size:21px;line-height:1.55;margin-top:12px}
+#psov .pssig{margin-top:16px;text-align:right;font-family:var(--serif);font-size:18px}
+/* ---------- reveal ---------- */
+#reveal{background:linear-gradient(#05060f,#171030 52%,#2c1a3f)}
+#reveal .sky{position:absolute;inset:0;overflow:hidden;pointer-events:none}
+.moon{position:absolute;top:12%;right:14%;width:64px;height:64px;border-radius:50%;
+  background:radial-gradient(circle at 36% 34%,#fff7e6,var(--gold2) 60%,#caa45e);box-shadow:0 0 50px rgba(240,217,168,.45)}
+.st{position:absolute;width:2px;height:2px;border-radius:50%;background:rgba(255,255,255,.8);animation:tw 3s infinite}
+@keyframes tw{50%{opacity:.2}}
+.fuji{position:absolute;bottom:0;left:0;right:0;width:100%}
+.destk{font-family:var(--kanji);font-weight:900;font-size:min(27vw,116px);color:var(--gold);line-height:1.05;
+  text-shadow:0 0 46px rgba(199,62,58,.55);letter-spacing:.04em}
+.destn{font-size:21px;letter-spacing:.62em;text-indent:.62em;margin-top:8px;color:var(--paper)}
+.dsub{margin-top:14px;font-family:var(--serif);font-style:italic;font-size:18px;color:rgba(246,239,227,.8)}
+.signs{margin-top:8px;font-size:12.5px;color:var(--pink);letter-spacing:.05em;opacity:.85}
+/* ---------- itinerary ---------- */
+#itin .inner{max-width:100%;padding:0}
+.rline{width:min(92vw,430px);margin:14px 0 4px}
+.rline line{stroke:rgba(217,179,107,.4);stroke-width:2}
+.rline circle{fill:#493a5e;stroke:rgba(217,179,107,.5);stroke-width:1.5;transition:.3s}
+.rline circle.on{fill:var(--red2);stroke:var(--gold2);filter:drop-shadow(0 0 6px rgba(224,90,82,.8))}
+.rline text{fill:rgba(246,239,227,.5);font-size:8.5px;font-family:var(--mono);letter-spacing:.06em;text-anchor:middle}
+.rline text.on{fill:var(--gold2)}
+#deck{display:flex;gap:14px;overflow-x:auto;scroll-snap-type:x mandatory;width:100vw;padding:14px 13vw 22px;
+  -webkit-overflow-scrolling:touch;scrollbar-width:none}
+#deck::-webkit-scrollbar{display:none}
+.card{flex:0 0 74vw;max-width:330px;scroll-snap-align:center;border-radius:22px;position:relative;
+  background:linear-gradient(165deg,#1f1733,#120d1f);border:1px solid rgba(217,179,107,.3);
+  box-shadow:0 14px 34px rgba(0,0,0,.5);padding:24px 22px 22px;min-height:240px;
+  display:flex;flex-direction:column;justify-content:flex-end;overflow:hidden}
+.card .em{font-size:58px;line-height:1;margin-bottom:auto;filter:drop-shadow(0 6px 14px rgba(0,0,0,.4))}
+.card .kj{position:absolute;top:16px;right:16px;writing-mode:vertical-rl;font-family:var(--kanji);
+  font-size:28px;color:rgba(217,179,107,.85);letter-spacing:.12em;height:130px;line-height:1.15;
+  text-shadow:0 0 14px rgba(217,179,107,.25)}
+.card .ct{font-family:var(--serif);font-weight:700;font-size:29px;color:var(--paper);margin-top:16px}
+.card .cs{font-size:14px;color:rgba(246,239,227,.66);margin-top:5px;line-height:1.45}
+.card .num{position:absolute;top:18px;left:20px;font-family:var(--mono);font-size:11px;color:rgba(246,239,227,.35)}
+/* ---------- certificate ---------- */
+#cert{justify-content:flex-start}
+.cert{width:100%;max-width:410px;background:linear-gradient(175deg,var(--paper),var(--paper2));color:#241c10;
+  border-radius:22px;box-shadow:0 18px 50px rgba(0,0,0,.55);padding:26px 24px 30px;margin-top:40px;position:relative}
+.cert .crest{display:flex;align-items:center;justify-content:center;gap:9px;font-family:var(--serif);
+  font-weight:700;letter-spacing:.14em;font-size:14px;color:#3a2d16}
+.cert .crest .minisun{width:18px;height:18px;border-radius:50%;background:var(--red);display:flex;align-items:center;justify-content:center;font-size:10px;color:var(--gold2)}
+.cert .conf{text-align:center;font-size:9.5px;letter-spacing:.34em;text-indent:.34em;text-transform:uppercase;color:#8c7b58;margin-top:8px}
+.zor{font-family:var(--serif);font-weight:700;font-size:43px;text-align:center;margin-top:14px;color:#241c10;line-height:1.05}
+.zor i{color:var(--red)}
+.msg{font-family:var(--serif);font-style:italic;font-size:19px;text-align:center;color:#3d2f1a;margin:12px 10px 0;line-height:1.5}
+.pols{display:flex;justify-content:center;gap:12px;margin:22px 0 6px}
+.pol{background:#fff;padding:8px 8px 10px;box-shadow:0 8px 20px rgba(0,0,0,.22);width:44%;transform:rotate(-3.5deg)}
+.pol:last-child{transform:rotate(3deg)}
+.pol .ph{aspect-ratio:3/3.6;background:#efe8da;display:flex;align-items:center;justify-content:center;
+  border:1.5px dashed #cbbb9b;color:#a08e66;font-size:26px;overflow:hidden}
+.pol .ph img{width:100%;height:100%;object-fit:cover;display:block}
+.pol .cap{font-family:var(--serif);font-style:italic;font-size:11.5px;text-align:center;margin-top:7px;color:#4a3b21}
+.rows{margin-top:18px;border-top:1px solid #d9cbab;padding-top:14px;display:flex;flex-direction:column;gap:9px;
+  position:relative;padding-right:80px}
+.row{display:flex;justify-content:space-between;align-items:baseline;gap:14px}
+.row .l{font-size:9px;letter-spacing:.2em;text-transform:uppercase;color:#8c7b58;white-space:nowrap}
+.row .v{font-size:13.5px;font-weight:700;text-align:right}
+.row .v.mono{font-family:var(--mono);font-weight:600}
+.hanko{position:absolute;right:-4px;top:12px;width:64px;height:64px;border-radius:12px;background:var(--red);
+  color:#fff;display:flex;align-items:center;justify-content:center;font-family:var(--kanji);font-size:37px;
+  transform:rotate(8deg) scale(0);box-shadow:0 4px 14px rgba(199,62,58,.4);opacity:.94}
+.hanko.stamp{animation:stamp .55s cubic-bezier(.2,1.4,.4,1) forwards}
+@keyframes stamp{0%{transform:rotate(20deg) scale(2.6);opacity:0}60%{opacity:.94}100%{transform:rotate(8deg) scale(1);opacity:.94}}
+.contact{margin-top:16px;text-align:center;font-size:13px}
+.contact a{color:var(--red);font-weight:700;text-decoration:none}
+.contact .tel{display:block;margin-top:4px;font-family:var(--mono);font-size:12.5px;color:#3d2f1a;text-decoration:none}
+.fine{margin-top:14px;text-align:center;font-size:9.5px;color:#a08e66;letter-spacing:.04em;line-height:1.6}
+#petals{position:fixed;inset:0;z-index:55;pointer-events:none}
+#sndbtn{position:fixed;left:14px;bottom:calc(env(safe-area-inset-bottom) + 14px);z-index:60;
+  width:42px;height:42px;border-radius:50%;background:rgba(11,10,20,.55);
+  backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);
+  border:1px solid rgba(217,179,107,.3);color:var(--gold);font-size:16px;
+  display:flex;align-items:center;justify-content:center;transition:.25s}
+#sndbtn.off{color:rgba(246,239,227,.35);border-color:rgba(246,239,227,.15)}
+#sndbtn.off::after{content:"";position:absolute;width:24px;height:1.5px;background:rgba(246,239,227,.5);transform:rotate(-45deg)}
+#sndbtn.hidden{display:none}
+@media (min-width:700px){body{background-image:radial-gradient(1400px 900px at 50% -10%, #1e1636 0%, var(--ink) 60%)}}
+/* ═══════════ v3 · design elevation ═══════════ */
+body{-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility}
+#waves{position:fixed;left:0;right:0;bottom:0;height:110px;z-index:1;pointer-events:none;opacity:.10;
+  background:url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="80" height="40"><g fill="none" stroke="%23d9b36b" stroke-width="1.4"><circle cx="40" cy="42" r="36"/><circle cx="40" cy="42" r="27"/><circle cx="40" cy="42" r="18"/><circle cx="40" cy="42" r="9"/><circle cx="0" cy="42" r="36"/><circle cx="0" cy="42" r="27"/><circle cx="0" cy="42" r="18"/><circle cx="80" cy="42" r="36"/><circle cx="80" cy="42" r="27"/><circle cx="80" cy="42" r="18"/></g></svg>') repeat-x bottom;
+  -webkit-mask-image:linear-gradient(transparent,#000 55%);mask-image:linear-gradient(transparent,#000 55%)}
+#vign{position:fixed;inset:0;z-index:2;pointer-events:none;
+  background:radial-gradient(140% 110% at 50% 42%,transparent 55%,rgba(2,2,8,.55) 100%)}
+.foil{background:linear-gradient(108deg,#8a6a2f 0%,#d9b36b 22%,#fff3d6 38%,#f0d9a8 46%,#d9b36b 58%,#8a6a2f 82%);
+  background-size:220% 100%;-webkit-background-clip:text;background-clip:text;color:transparent;
+  animation:foil 7s ease-in-out infinite}
+@keyframes foil{0%,100%{background-position:110% 0}50%{background-position:-10% 0}}
+.brand b{background:linear-gradient(108deg,#8a6a2f 0%,#d9b36b 22%,#fff3d6 38%,#f0d9a8 46%,#d9b36b 58%,#8a6a2f 82%);
+  background-size:220% 100%;-webkit-background-clip:text;background-clip:text;color:transparent;animation:foil 7s ease-in-out infinite}
+.destk{background:linear-gradient(115deg,#a97f3c 0%,#d9b36b 25%,#ffe9bd 42%,#d9b36b 60%,#a97f3c 85%);
+  background-size:200% 100%;-webkit-background-clip:text;background-clip:text;color:transparent;
+  animation:foil 6s ease-in-out infinite;filter:drop-shadow(0 0 34px rgba(199,62,58,.5))}
+.pass,.cert{background-image:url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="180" height="180"><filter id="n"><feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="2" stitchTiles="stitch"/><feColorMatrix values="0 0 0 0 0.45 0 0 0 0 0.38 0 0 0 0 0.26 0 0 0 0.05 0"/></filter><rect width="180" height="180" filter="url(%23n)"/></svg>'),linear-gradient(175deg,var(--paper),var(--paper2))}
+.cert::before{content:"";position:absolute;inset:9px;border:1px solid rgba(138,113,63,.28);border-radius:15px;pointer-events:none}
+.screen .inner>*:not(.hint):not(#p1svg){opacity:0}
+.screen.active .inner>*:not(.hint):not(#p1svg){animation:rise .7s cubic-bezier(.16,1,.3,1) both}
+.screen.active .inner>*:nth-child(1){animation-delay:.06s}
+.screen.active .inner>*:nth-child(2){animation-delay:.14s}
+.screen.active .inner>*:nth-child(3){animation-delay:.22s}
+.screen.active .inner>*:nth-child(4){animation-delay:.30s}
+.screen.active .inner>*:nth-child(5){animation-delay:.38s}
+.screen.active .inner>*:nth-child(6){animation-delay:.46s}
+.screen.active .inner>*:nth-child(7){animation-delay:.54s}
+.screen.active .inner>*:nth-child(8){animation-delay:.62s}
+@keyframes rise{from{opacity:0;transform:translateY(24px)}to{opacity:1;transform:none}}
+#reveal .inner{position:relative;z-index:2}
+.btn{position:relative;overflow:hidden}
+.btn::after{content:"";position:absolute;top:0;left:-70%;width:36%;height:100%;
+  background:linear-gradient(105deg,transparent,rgba(255,255,255,.6),transparent);
+  transform:skewX(-20deg);animation:btnshine 3.4s ease-in-out infinite}
+@keyframes btnshine{0%,55%{left:-70%}100%{left:150%}}
+#p1svg{animation:sealbreathe 5s ease-in-out infinite}
+#p1svg.solved{animation:none}
+@keyframes sealbreathe{0%,100%{filter:drop-shadow(0 0 16px rgba(199,62,58,.10))}50%{filter:drop-shadow(0 0 32px rgba(199,62,58,.26))}}
+#degring{transform-origin:170px 170px;animation:spin 70s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.cloud{position:absolute;width:240px;height:64px;border-radius:70px;background:rgba(185,165,225,.10);
+  filter:blur(20px);animation:drift linear infinite}
+@keyframes drift{from{transform:translateX(-40%)}to{transform:translateX(140%)}}
+.plbody{animation:bob 2.4s ease-in-out infinite}
+@keyframes bob{50%{transform:translateY(-3.5px)}}
+.micro{font-family:var(--mono);font-size:6.5px;letter-spacing:.26em;color:#8c7b58;opacity:.8;
+  white-space:nowrap;overflow:hidden;margin:-8px 20px 14px;text-align:center}
+.barcode{margin-bottom:10px}
+.rule{display:flex;align-items:center;gap:10px;margin-top:16px}
+.rule::before,.rule::after{content:"";flex:1;height:1px;background:#d9cbab}
+.rule span{color:#b09760;font-size:8px;line-height:1}
+.rows{border-top:none;margin-top:6px;padding-top:8px}
+.crew{border-top:none;margin-top:2px;padding-top:6px}
+#prog span{width:27px;height:27px;border:1px solid rgba(217,179,107,.22);border-radius:50%;
+  display:flex;align-items:center;justify-content:center}
+.em svg{width:56px;height:56px;filter:drop-shadow(0 0 12px rgba(217,179,107,.25))}
+.card .em{margin-bottom:auto}
+.card{box-shadow:0 14px 34px rgba(0,0,0,.5), inset 0 1px 0 rgba(246,239,227,.07)}
+.pol{background:#fffdf8}
+.zor i{font-style:italic}
+</style>
+</head>
+<body>
+<div id="waves"></div><div id="vign"></div>
+<canvas id="petals"></canvas>
+<div id="prog"><span id="pr1">一</span><span id="pr2">二</span><span id="pr3">三</span></div>
+<button id="sndbtn" class="off" aria-label="music">♪</button>
+<nav id="langs">
+  <button data-l="es" class="on">ES</button><button data-l="ca">CA</button><button data-l="eu">EU</button><button data-l="en">EN</button>
+</nav>
+
+<!-- fragment overlay -->
+<div id="fragov"><div class="fk" id="fragk"></div><div class="fl" id="fragl"></div></div>
+<div id="flash"></div>
+
+<!-- ═══ PUZZLE 1 · seal ═══ -->
+<section class="screen active" id="g1"><div class="inner">
+  <div class="forname" data-i18n="p_for"></div>
+  <svg id="p1svg" viewBox="0 0 340 340">
+    <circle cx="170" cy="170" r="166" fill="none" stroke="rgba(217,179,107,.14)" stroke-width="1"/>
+    <circle id="degring" cx="170" cy="170" r="159" fill="none" stroke="rgba(217,179,107,.30)" stroke-width="3" stroke-dasharray="1 11"/>
+    <path d="M162 12 L178 12 L170 24 Z" fill="#c73e3a"/>
+    <g class="ring" id="r3">
+      <circle cx="170" cy="170" r="146" fill="none" stroke="rgba(217,179,107,.2)" stroke-width="1"/>
+      <line x1="170" y1="10" x2="170" y2="38" stroke="#c73e3a" stroke-width="6" stroke-linecap="round"/>
+      <g stroke="rgba(217,179,107,.55)" stroke-width="2" stroke-linecap="round"></g>
+    </g>
+    <g class="ring" id="r2">
+      <circle cx="170" cy="170" r="110" fill="none" stroke="rgba(217,179,107,.2)" stroke-width="1"/>
+      <line x1="170" y1="46" x2="170" y2="74" stroke="#c73e3a" stroke-width="6" stroke-linecap="round"/>
+      <g stroke="rgba(217,179,107,.55)" stroke-width="2" stroke-linecap="round"></g>
+    </g>
+    <g class="ring" id="r1">
+      <circle cx="170" cy="170" r="74" fill="none" stroke="rgba(217,179,107,.2)" stroke-width="1"/>
+      <line x1="170" y1="82" x2="170" y2="110" stroke="#c73e3a" stroke-width="6" stroke-linecap="round"/>
+      <g stroke="rgba(217,179,107,.55)" stroke-width="2" stroke-linecap="round"></g>
+    </g>
+    <circle cx="170" cy="170" r="34" fill="none" stroke="rgba(217,179,107,.35)" stroke-width="1"/>
+    <circle cx="170" cy="170" r="7" fill="#c73e3a"/>
+  </svg>
+  <p class="hint" id="h1" data-i18n="p1_hint"></p>
+</div></section>
+
+<!-- ═══ PUZZLE 2 · stars ═══ -->
+<section class="screen" id="g2"><div class="inner">
+  <div id="skystage">
+    <svg id="lines"></svg>
+  </div>
+  <p class="hint" id="h2" data-i18n="p2_hint"></p>
+</div></section>
+
+<!-- ═══ PUZZLE 3 · gate ═══ -->
+<section class="screen" id="g3"><div class="inner">
+  <svg id="gate" viewBox="0 0 240 150">
+    <path d="M14 34 Q120 10 226 34 L221 52 Q120 32 19 52 Z" fill="#8f2f2c"/>
+    <rect x="34" y="62" width="172" height="10" rx="3" fill="#8f2f2c"/>
+    <rect x="56" y="52" width="14" height="98" rx="4" fill="#7a2825"/>
+    <rect x="170" y="52" width="14" height="98" rx="4" fill="#7a2825"/>
+    <rect x="112" y="34" width="16" height="28" rx="3" fill="#7a2825"/>
+  </svg>
+  <div class="slots"><div class="slot" id="sl1"></div><div class="slot" id="sl2"></div></div>
+  <div id="grid"></div>
+  <p class="hint" id="h3" data-i18n="p3_hint"></p>
+</div></section>
+
+<!-- ═══ SPLASH ═══ -->
+<section class="screen" id="splash"><div class="inner">
+  <div class="mark"><div class="sun"></div><div class="plane">✈</div></div>
+  <div class="kicker" data-i18n="kicker"></div>
+  <h1 class="brand" style="margin-top:14px">ROCA<br><b>AIRWAYS</b></h1>
+  <p class="tagline" data-i18n="tagline"></p>
+  <div class="notif"><span class="dot"></span><span data-i18n="notif"></span></div>
+  <button class="btn" id="bCheckin" data-i18n="cta"></button>
+  <div class="ghost">RA-2027 · BCN → TYO</div>
+</div></section>
+
+<!-- ═══ CLASS SELECTION ═══ -->
+<section class="screen" id="clssel"><div class="inner">
+  <div class="ptitle" data-i18n="class_t"></div>
+  <div class="clscard dead" id="cEco" data-sold="">
+    <div><div class="cn" data-i18n="c_eco"></div><div class="cp" data-i18n="c_eco_p"></div></div>
+  </div>
+  <div class="clscard dead" id="cBiz" data-sold="">
+    <div><div class="cn" data-i18n="c_biz"></div><div class="cp" data-i18n="c_biz_p"></div></div>
+  </div>
+  <div class="clscard gold" id="cFirst">
+    <div><div class="cn" data-i18n="c_first"></div><div class="cp" data-i18n="c_first_p"></div>
+      <div class="foryou" data-i18n="foryou"></div></div>
+    <div class="tick">✓</div>
+  </div>
+  <div class="perks">
+    <div class="perk" data-i18n="perk1"></div>
+    <div class="perk" data-i18n="perk2"></div>
+    <div class="perk" data-i18n="perk3"></div>
+    <div class="perk" data-i18n="perk4"></div>
+  </div>
+  <button class="btn" id="bClass" data-i18n="cta_class"></button>
+</div></section>
+
+<!-- ═══ BOARDING PASS ═══ -->
+<section class="screen" id="board"><div class="inner">
+  <div class="ptitle" data-i18n="pass_t"></div>
+  <div class="pass" id="pass">
+    <div class="phead">
+      <div class="pb"><span class="minisun">✈</span>ROCA AIRWAYS</div>
+      <span class="chip">FIRST ∞</span>
+    </div>
+    <div class="route">
+      <div class="apt"><div class="code">BCN</div><div class="city">Barcelona</div></div>
+      <div class="path"><span class="pl">✈</span></div>
+      <div class="apt"><div class="code">TYO</div><div class="city">Tokyo</div></div>
+    </div>
+    <div class="pgrid">
+      <div class="pg"><div class="l" data-i18n="lbl_pax"></div><div class="v">ANDREA ITURRALDE</div></div>
+      <div class="pg"><div class="l" data-i18n="lbl_flight"></div><div class="v mono">RA-2027</div></div>
+      <div class="pg"><div class="l" data-i18n="lbl_dep"></div><div class="v" data-i18n="val_dep"></div></div>
+      <div class="pg"><div class="l" data-i18n="lbl_seat"></div><div class="v" data-i18n="val_seat"></div></div>
+      <div class="pg"><div class="l" data-i18n="lbl_class"></div><div class="v" data-i18n="val_class"></div></div>
+      <div class="pg"><div class="l" data-i18n="lbl_gate"></div><div class="v mono">∞</div></div>
+    </div>
+    <div class="barcode"></div>
+    <div class="micro">RA-2027 · ITURRALDE/ANDREA · BCN→TYO · FIRST ∞ · SEAT 1A · RA-2027 · ITURRALDE/ANDREA · BCN→TYO</div>
+    <div class="stubwrap"><span class="n2"></span>
+      <div id="stub">
+        <div><div class="lbl">DEST</div><div class="big">TYO</div></div>
+        <div class="arr"><span data-i18n="tear" style="font-size:11px;font-weight:600;letter-spacing:.06em"></span> »</div>
+      </div>
+    </div>
+  </div>
+</div></section>
+
+<!-- ═══ REVEAL ═══ -->
+<section class="screen" id="reveal">
+  <div class="sky" id="skybits">
+    <div class="moon"></div>
+    <div class="cloud" style="top:20%;animation-duration:34s"></div>
+    <div class="cloud" style="top:34%;width:170px;animation-duration:26s;animation-delay:-12s"></div>
+    <svg class="fuji" viewBox="0 0 430 180" preserveAspectRatio="none">
+      <path d="M0 180 L120 180 L215 46 L310 180 L430 180 Z" fill="#191233"/>
+      <path d="M215 46 L245 92 L228 84 L215 96 L202 84 L185 92 Z" fill="#ded7ec"/>
+      <path d="M0 180 L60 130 L130 180 Z" fill="#130d26"/>
+      <path d="M330 180 L385 140 L430 180 Z" fill="#130d26"/>
+    </svg>
+  </div>
+  <div class="inner" style="position:relative;z-index:2">
+    <div class="kicker" data-i18n="dest_lbl"></div>
+    <div class="destk" style="margin-top:16px">東京</div>
+    <div class="destn">TOKYO</div>
+    <p class="dsub" data-i18n="dest_sub"></p>
+    <p class="signs" data-i18n="signs"></p>
+    <button class="btn" id="bItin" data-i18n="cta_itin"></button>
+  </div>
+</section>
+
+<!-- ═══ ITINERARY ═══ -->
+<section class="screen" id="itin"><div class="inner">
+  <div class="ptitle" style="margin-bottom:4px" data-i18n="itin_t"></div>
+  <svg id="jmap" viewBox="0 0 430 250">
+    <path class="land" d="M300.4,32.7L301.0,33.1L304.0,32.1L303.4,35.3L303.1,38.5L303.4,43.8L303.6,46.2L304.1,48.6L305.3,50.2L307.0,51.4L309.4,55.2L310.7,59.8L311.6,62.0L312.2,64.4L312.4,65.4L312.4,66.5L312.2,68.0L312.5,69.1L312.2,72.8L311.1,77.1L311.0,79.3L310.1,79.7L309.5,80.7L309.0,81.2L308.5,81.5L307.7,81.6L307.2,82.0L307.0,83.2L306.6,84.3L306.0,85.2L305.4,86.3L305.0,88.9L304.8,91.6L304.2,93.5L302.6,94.0L300.8,94.0L298.5,94.8L298.0,95.4L296.2,98.6L295.7,100.6L295.7,102.6L296.2,105.1L296.9,107.6L297.4,112.2L296.9,119.2L296.3,121.4L295.2,122.9L294.3,123.6L293.6,124.4L292.6,126.7L291.0,131.1L290.9,132.3L290.9,133.4L290.4,135.0L290.1,136.5L290.4,138.2L290.9,139.8L293.1,143.9L293.9,145.2L294.9,146.3L291.2,147.5L290.5,148.1L288.3,150.4L287.6,152.7L287.7,155.1L287.3,156.0L286.7,156.8L286.0,157.3L283.6,158.4L282.0,159.5L280.5,161.2L279.9,162.2L278.7,161.9L278.0,161.1L278.6,160.0L278.5,158.9L278.8,155.8L278.4,154.5L279.7,153.6L280.2,152.1L281.6,150.9L282.5,149.9L282.7,149.0L281.8,148.0L281.0,147.4L279.7,147.4L278.5,147.6L277.8,148.5L277.5,149.7L277.6,150.2L277.4,150.7L275.6,152.4L275.9,154.1L276.4,155.0L277.1,155.4L276.9,156.0L276.0,157.4L275.4,157.5L274.3,155.6L272.9,154.5L271.1,154.5L269.4,154.9L267.9,156.2L267.5,157.3L267.2,158.4L267.3,161.1L266.8,163.3L265.7,165.3L265.1,166.0L263.8,167.4L262.9,167.5L262.2,166.9L261.7,166.0L262.3,162.6L262.3,160.7L263.9,159.8L262.6,158.4L261.0,157.9L258.8,158.6L258.2,159.4L257.7,160.5L256.5,161.9L255.2,163.2L253.7,165.4L252.7,168.0L249.4,167.1L247.6,166.9L245.8,167.0L242.6,166.7L239.0,167.2L235.0,168.2L235.2,167.5L238.5,165.9L238.6,165.5L238.3,164.6L237.5,164.6L235.5,164.9L234.5,164.7L234.1,163.8L233.4,163.4L233.0,163.8L233.1,165.6L232.6,165.8L232.0,165.4L232.2,164.0L231.7,161.9L231.7,160.6L232.4,159.6L231.7,159.1L230.9,159.3L229.9,159.8L229.1,160.5L227.3,164.3L226.7,166.4L228.0,168.1L231.5,170.5L232.1,171.1L232.1,172.1L231.7,173.1L230.7,173.6L226.8,174.4L223.5,176.0L222.5,177.5L219.4,183.5L217.0,187.6L213.5,189.0L209.7,187.7L208.8,186.3L208.0,184.6L206.6,183.0L205.3,181.3L204.6,179.2L204.7,175.9L204.1,173.8L204.7,173.3L206.7,172.1L207.4,171.4L208.6,169.8L209.1,168.9L209.1,167.6L208.2,166.9L205.7,166.9L203.2,167.3L201.5,166.7L199.2,165.1L198.5,164.7L196.1,164.6L194.3,164.9L192.6,165.5L190.7,165.7L190.1,166.0L188.0,168.0L186.4,169.3L184.9,169.9L181.8,170.1L180.2,170.5L178.6,171.1L178.1,171.1L176.4,172.0L174.5,172.8L173.4,173.6L171.5,173.0L167.6,174.5L165.7,174.6L163.8,173.9L162.1,172.6L160.4,173.1L159.2,175.0L158.6,178.7L157.9,180.4L157.7,182.4L156.9,182.0L151.7,178.5L151.4,178.3L147.2,178.9L146.1,179.2L144.8,180.0L143.4,180.3L142.1,179.8L140.9,178.9L139.7,179.2L138.4,179.8L138.0,174.3L138.2,173.6L139.0,172.7L139.8,171.9L141.8,171.6L143.9,171.9L145.3,171.5L146.5,170.4L147.8,168.8L149.3,167.6L151.3,166.6L153.2,165.5L154.9,163.9L156.5,162.2L157.9,160.9L159.5,159.8L162.0,157.2L165.2,154.3L166.4,152.2L167.2,151.6L169.9,150.4L173.6,149.5L175.4,149.6L177.1,151.4L178.0,151.2L178.9,150.7L180.8,150.4L182.8,150.7L184.7,150.7L186.6,150.5L190.2,149.9L192.2,149.1L194.0,148.1L200.7,147.5L205.3,145.9L206.0,146.0L206.7,146.3L206.8,147.5L206.2,148.9L206.8,149.7L207.7,150.1L212.0,150.3L213.3,150.6L215.1,149.7L216.8,148.6L218.5,147.1L219.8,145.5L218.6,143.4L218.4,141.2L219.4,138.7L220.7,136.6L222.4,135.3L223.9,133.9L227.0,129.8L229.3,126.5L230.1,122.4L229.6,117.5L231.5,113.9L233.4,113.3L237.1,111.6L239.0,111.1L239.3,111.8L239.3,112.8L236.4,115.8L234.7,117.1L233.7,117.5L232.8,118.0L232.4,119.1L233.9,120.9L234.3,122.2L234.2,123.5L234.2,124.6L235.9,125.8L237.9,126.2L238.6,126.2L239.4,125.9L241.6,122.9L242.0,122.4L248.3,120.1L251.4,118.4L253.1,118.0L254.7,117.1L258.3,113.7L259.6,112.1L260.8,110.3L261.8,108.3L262.6,106.1L263.6,104.7L269.3,101.4L271.1,99.6L271.7,98.8L272.4,96.2L272.9,93.6L273.6,91.6L274.5,89.6L275.8,87.6L277.2,85.8L278.0,83.9L279.2,79.4L279.8,76.9L280.2,76.0L280.8,75.2L281.3,74.3L281.7,73.2L281.9,72.1L282.1,68.8L282.0,66.3L281.1,64.1L280.3,63.5L279.4,63.5L278.1,63.7L277.1,62.8L277.3,62.0L278.4,61.9L279.1,61.5L279.7,60.7L280.7,58.4L281.3,55.8L281.4,54.7L280.6,52.6L279.9,50.2L279.9,48.8L280.6,47.3L281.6,46.1L282.5,45.7L283.4,45.7L284.3,45.2L285.1,44.5L285.5,43.7L286.3,41.6L286.5,40.4L286.1,37.1L286.6,36.3L287.2,35.7L288.1,36.1L288.9,36.2L290.0,36.1L291.0,36.4L291.2,37.3L291.8,42.7L292.2,43.5L292.9,44.0L293.7,43.9L294.4,43.1L294.9,42.0L295.8,41.7L298.7,43.0L299.7,42.1L300.4,40.8L301.0,38.4L300.7,36.2L300.0,35.4L299.3,35.6L298.7,36.2L297.9,36.5L293.7,37.6L293.7,35.2L294.6,31.6L295.2,30.5L295.8,30L297.6,30.6L298.5,31.0ZM341.2,-25.9L343.2,-25.8L344.1,-25.9L345.5,-25.6L351.5,-22.2L353.4,-21.8L355.2,-21.8L356.5,-22.0L357.7,-23.0L361.3,-27.0L365.1,-30.7L365.5,-30.5L365.5,-29.5L365.2,-28.4L363.5,-25.0L361.7,-20.5L361.3,-18.2L361.9,-16.0L363.0,-14.2L364.0,-11.7L365.1,-8.2L366.5,-7.8L367.3,-7.7L368.9,-8.7L370.3,-10.1L371.5,-10.2L372.8,-10.0L371.1,-9.1L369.5,-8.0L368.1,-5.8L367.6,-5.5L366.0,-5.6L365.1,-5.5L363.3,-4.6L361.7,-3.6L360.1,-2.4L358.4,-1.7L356.6,-1.6L353.9,-0.6L352.1,-0.5L348.7,-1.3L347.1,-1.1L343.5,0.8L340.2,3.6L337.4,6.8L335.0,10.7L334.1,12.7L333.5,14.9L333.4,16.3L333.2,17.7L332.7,18.7L332.0,19.5L330.0,19.1L326.8,17.0L320.5,14.1L313.9,9.5L310.2,7.2L303.2,7.9L296.6,12.3L296.0,11.9L293.5,8.9L292.3,7.7L290.8,7.4L289.7,7.4L288.6,7.7L287.2,9.2L286.6,10.3L286.2,11.5L286.1,12.4L286.3,13.3L287.7,15.3L289.4,16.7L290.2,17.0L291.9,16.9L292.7,17.1L295.4,20.0L298.5,22.7L299.2,23.6L298.1,24.6L296.9,25.1L295.4,25.0L294.0,24.6L291.5,23.4L290.5,24.4L288.8,26.4L287.9,28.6L287.2,29.7L285.4,31.0L283.4,31.7L282.5,31.4L281.7,30.6L281.3,29.6L281.1,28.5L281.5,25.9L282.4,23.7L282.8,21.4L282.0,18.1L281.5,17.4L279.5,15.5L278.5,13.6L278.3,11.3L278.4,10.0L278.9,7.2L279.4,5.7L280.3,5.3L281.4,5.0L282.9,4.0L284.6,2.6L286.3,1.1L287.9,-0.7L288.8,-2.8L287.3,-5.3L287.1,-6.8L287.3,-8.2L288.8,-9.0L290.3,-8.4L293.4,-6.3L294.0,-6.1L296.1,-6.0L299.0,-5.6L300.7,-5.7L301.5,-6.0L302.7,-7.7L303.3,-9.9L303.1,-12.7L303.1,-15.6L303.9,-17.9L306.3,-21.6L307.0,-23.8L307.2,-29.1L308.1,-31.5L308.8,-33.9L309.1,-39.1L308.2,-44.1L307.1,-46.5L306.0,-48.8L306.2,-51.1L307.1,-53.1L307.1,-53.8L307.3,-54.3L309.1,-54.7L309.9,-55.2L310.7,-56.2L311.6,-56.8L312.2,-56.2L312.8,-55.2L315.2,-52.6L319.1,-48.1L323.6,-41.4L326.4,-38.1L329.4,-35.1L332.8,-32.0L336.3,-29.4L338.5,-28.2L340.2,-26.2ZM142.5,186.8L144.6,187.4L145.5,187.4L146.3,187.2L147.6,186.4L148.9,185.9L149.8,186.2L150.6,186.8L151.1,187.7L150.9,188.7L149.4,190.8L148.2,193.0L151.0,193.4L153.8,193.4L153.1,194.8L153.1,195.9L153.9,196.5L154.7,197.3L154.4,198.0L154.0,198.6L155.6,199.7L155.4,200.4L155.1,201.1L151.2,205.8L150.1,208.1L149.3,210.8L148.6,212.7L148.1,214.6L147.6,216.7L147.0,218.9L147.2,220.9L147.0,222.9L145.0,227.8L143.6,227.7L141.9,227.1L140.9,227.2L140.3,228.3L141.3,230.5L138.2,233.2L134.8,235L134.7,234.1L135.1,233.5L135.6,233.0L135.9,232.4L136.4,230.3L136.2,228.2L135.1,225.5L135.1,224.6L135.8,224.2L136.3,224.1L136.5,223.7L136.6,222.9L136.2,222.2L135.3,222.0L134.3,222.0L133.7,223.0L132.8,224.9L132.3,226.8L132.5,227.8L132.9,228.7L134.1,230.3L133.8,231.2L133.3,231.9L128.9,230.3L128.0,230.2L127.2,229.9L126.3,227.7L128.1,227.2L128.6,226.9L128.8,226.2L129.1,224.2L128.2,222.4L127.6,221.8L126.9,221.1L127.3,219.6L127.1,217.7L127.1,215.1L127.4,214.7L129.0,214.1L130.2,212.7L131.3,211.1L132.8,208.3L134.1,205.3L132.9,205.1L131.9,204.6L132.9,203.1L132.6,201.3L131.0,199.1L130.0,196.4L128.5,195.3L127.7,194.8L126.8,195.4L126.0,196.2L126.7,197.9L126.7,199.4L126.8,200.9L127.5,201.0L128.4,200.7L129.1,200.9L129.5,201.7L129.7,202.7L129.4,203.7L128.7,204.2L127.8,204.2L127.1,203.6L126.4,202.9L124.8,202.4L123.3,203.3L121.7,205.2L120.4,206.2L121.0,204.8L121.3,203.3L120.7,202.2L119.1,200.5L118.8,199.5L118.7,198.2L119.0,197.0L120.6,198.4L121.3,200.2L122.5,200.9L123.9,200.9L122.8,198.4L122.4,197.7L120.8,196.6L118.7,194.7L117.4,193.7L117.9,191.7L118.7,191.3L119.4,191.4L121.6,192.1L121.8,191.1L121.5,190.6L121.3,189.9L122.8,189.1L125.1,188.4L125.6,188.0L126.1,187.3L126.7,186.9L128.4,186.9L129.8,186.2L130.9,184.3L131.2,183.3L131.6,182.4L134.5,180.9L135.3,180.7L137.2,180.9L139.0,181.7L139.9,183.5L140.6,185.5ZM192.5,174.4L194.6,175.2L196.9,175.0L196.9,178.5L197.1,179.6L197.8,180.7L197.5,182.2L198.5,182.7L195.5,184.4L192.8,186.7L191.6,188.3L190.7,189.9L190.1,191.6L189.7,193.5L188.8,192.8L186.2,189.7L184.6,188.9L181.9,188.5L181.1,188.6L175.6,191.4L174.9,193.5L173.4,196.6L172.8,197.6L172.0,197.9L171.4,198.4L170.8,201.1L169.1,202.8L168.1,202.8L166.3,202.3L165.5,202.6L166.6,200.0L164.9,199.7L163.2,199.7L163.2,198.0L162.2,197.0L162.9,195.8L162.9,194.8L163.4,194.2L163.5,193.4L163.5,192.6L162.5,192.5L161.8,191.9L161.9,190.1L161.3,190.0L159.9,190.3L156.8,191.8L156.0,191.8L157.3,190.8L160.0,189.3L161.2,188.5L163.9,186.3L165.5,185.2L166.4,183.3L166.7,182.1L167.3,181.1L167.8,179.5L168.6,178.9L170.2,177.5L171.0,177.6L172.0,179.4L173.3,180.7L174.2,180.6L175.9,179.9L176.7,179.7L178.6,179.8L180.3,179.0L181.0,178.0L181.2,176.8L180.6,174.7L181.5,174.9L182.3,174.8L184.1,173.5L186.0,172.7L188.0,172.5L190.3,173.2Z"/>
+    <path class="route" id="jroute"/>
+    <g id="stations"></g>
+    <g id="jplane"><polygon class="plbody" points="-6,4 8,0 -6,-4 -3,0" fill="#f0d9a8"/></g>
+  </svg>
+  <div id="deck"></div>
+  <button class="btn" id="bFinal" style="margin-top:4px" data-i18n="cta_final"></button>
+</div></section>
+
+<!-- ═══ CERTIFICATE ═══ -->
+<section class="screen" id="cert"><div class="inner">
+  <div class="cert">
+    <div class="crest"><span class="minisun">✈</span>ROCA AIRWAYS</div>
+    <div class="conf" data-i18n="conf"></div>
+    <div class="zor">Zorionak, <i>maitea</i></div>
+    <p class="msg" data-i18n="msg"></p>
+    <div class="pols">
+      <div class="pol"><div class="ph" id="ph1">📷</div><div class="cap" data-i18n="ph_a"></div></div>
+      <div class="pol"><div class="ph" id="ph2">📷</div><div class="cap" data-i18n="ph_b"></div></div>
+    </div>
+    <div class="rule"><span>◆</span></div>
+    <div class="rows">
+      <div class="row"><span class="l" data-i18n="lbl_fare"></span><span class="v" data-i18n="val_fare"></span></div>
+      <div class="row"><span class="l" data-i18n="lbl_ref"></span><span class="v mono">ITU✈ROCA-2027</span></div>
+      <div class="row"><span class="l" data-i18n="lbl_valid"></span><span class="v" data-i18n="valid"></span></div>
+      <div class="hanko" id="hanko">愛</div>
+    </div>
+    <div class="rule"><span>◆</span></div>
+    <div class="crew">
+      <div class="ct2" data-i18n="crew_t"></div>
+      <div class="cl" data-i18n="crew_1"></div>
+      <div class="cl" data-i18n="crew_2"></div>
+    </div>
+    <div class="contact">
+      <span class="l" style="font-size:9px;letter-spacing:.2em;text-transform:uppercase;color:#8c7b58" data-i18n="lbl_contact"></span><br>
+      <a href="https://evengreaterhusband.com">evengreaterhusband.com</a>
+      <a class="tel" href="tel:+34691909262">+34 691 909 262</a>
+    </div>
+    <p class="fine" data-i18n="fine"></p>
+    <p class="pshint" data-i18n="ps_hint"></p>
+  </div>
+</div></section>
+
+<!-- P.D. letter -->
+<div id="psov"><div class="letter">
+  <div class="pst">P.D.</div>
+  <p class="psm" data-i18n="ps_msg"></p>
+  <div class="pssig">— R.</div>
+</div></div>
+
+<script>
+/* ══════════ i18n ══════════ */
+const L={
+es:{p_for:"Para Andrea",p1_hint:"Gira los anillos. Alinea el rojo.",p2_hint:"Observa las estrellas. Repite su orden.",p3_hint:"Las dos marcas que ganaste. En orden.",
+kicker:"Vuelo privado",tagline:"La aerolínea oficial de nosotros dos",notif:"1 reserva pendiente · ANDREA ITURRALDE",cta:"Hacer check-in",
+pass_t:"Tarjeta de embarque",lbl_pax:"Pasajera",lbl_flight:"Vuelo",lbl_dep:"Salida",val_dep:"2027 · en cuanto tengamos curro",
+lbl_seat:"Asiento",val_seat:"1A · ventanilla, obvio",lbl_class:"Clase",val_class:"Primera ∞",lbl_gate:"Puerta",tear:"desliza",
+dest_lbl:"Destino",dest_sub:"Japón nos espera.",signs:"Las señales estaban ahí: 東 + 京",cta_itin:"Ver itinerario",
+itin_t:"Itinerario",cta_final:"Confirmar reserva",conf:"Reserva confirmada",
+msg:"Tú me regalaste Nueva Zelanda. Yo te regalo Japón. 2027 es nuestro.",
+ph_a:"Prueba A: los pasajeros",ph_b:"Prueba B: entrenando para Japón",
+lbl_fare:"Tarifa",val_fare:"10¹² besos/pax · masaje incluido",lbl_ref:"Localizador",lbl_valid:"Validez",valid:"Para siempre · No reembolsable",
+lbl_contact:"Atención al pasajero",fine:"Roca Airways S.A. · Sucesora legal de Iturralde Travel™ · BCN ✈ TYO",
+class_t:"Selecciona tu clase",c_eco:"Turista",c_eco_p:"10⁹ besos/pax",c_biz:"Business",c_biz_p:"10¹⁰ besos/pax",
+c_first:"Primera ∞",c_first_p:"10¹² besos/pax",sold:"Agotada",foryou:"Única clase disponible para ti",
+perk1:"Ventanilla de por vida",perk2:"Equipaje emocional sin recargo",perk3:"Millas V.I.A. — Very Important Andrea",perk4:"Siestas en hombro ilimitadas",
+cta_class:"Continuar al embarque",crew_t:"Tripulación",crew_1:"Capitán: R. Roca",crew_2:"Comandante suprema: A. Iturralde",
+ps_hint:"P.D. — toca el sello",ps_msg:"Los aviones son la excusa. Contigo, cualquier sitio es el destino. Te quiero.",
+cards:[["Tokio","Perdernos a gusto por Shibuya"],["Monte Fuji","Madrugar solo por esta vista"],["Kioto","Mil torii en Fushimi Inari"],["Osaka","Comer hasta la ruina en Dōtonbori"],["Nara","Sobornar ciervos con galletitas"],["Hiroshima","Memoria, paz y okonomiyaki"]]},
+ca:{p_for:"Per a l'Andrea",p1_hint:"Gira els anells. Alinea el vermell.",p2_hint:"Observa les estrelles. Repeteix l'ordre.",p3_hint:"Les dues marques que has guanyat. En ordre.",
+kicker:"Vol privat",tagline:"La companyia aèria oficial de nosaltres dos",notif:"1 reserva pendent · ANDREA ITURRALDE",cta:"Fer check-in",
+pass_t:"Targeta d'embarcament",lbl_pax:"Passatgera",lbl_flight:"Vol",lbl_dep:"Sortida",val_dep:"2027 · quan tinguem feina",
+lbl_seat:"Seient",val_seat:"1A · finestra, és clar",lbl_class:"Classe",val_class:"Primera ∞",lbl_gate:"Porta",tear:"arrossega",
+dest_lbl:"Destinació",dest_sub:"El Japó ens espera.",signs:"Els senyals hi eren: 東 + 京",cta_itin:"Veure itinerari",
+itin_t:"Itinerari",cta_final:"Confirmar la reserva",conf:"Reserva confirmada",
+msg:"Tu em vas regalar Nova Zelanda. Jo et regalo el Japó. El 2027 és nostre.",
+ph_a:"Prova A: els passatgers",ph_b:"Prova B: entrenant per al Japó",
+lbl_fare:"Tarifa",val_fare:"10¹² petons/pax · massatge inclòs",lbl_ref:"Localitzador",lbl_valid:"Validesa",valid:"Per sempre · No reemborsable",
+lbl_contact:"Atenció al passatger",fine:"Roca Airways S.A. · Successora legal d'Iturralde Travel™ · BCN ✈ TYO",
+class_t:"Selecciona la teva classe",c_eco:"Turista",c_eco_p:"10⁹ petons/pax",c_biz:"Business",c_biz_p:"10¹⁰ petons/pax",
+c_first:"Primera ∞",c_first_p:"10¹² petons/pax",sold:"Esgotada",foryou:"L'única classe disponible per a tu",
+perk1:"Finestra de per vida",perk2:"Equipatge emocional sense recàrrec",perk3:"Milles V.I.A. — Very Important Andrea",perk4:"Migdiades a l'espatlla il·limitades",
+cta_class:"Continuar a l'embarcament",crew_t:"Tripulació",crew_1:"Capità: R. Roca",crew_2:"Comandant suprema: A. Iturralde",
+ps_hint:"P.D. — toca el segell",ps_msg:"Els avions són l'excusa. Amb tu, qualsevol lloc és la destinació. T'estimo.",
+cards:[["Tòquio","Perdre'ns a gust per Shibuya"],["Mont Fuji","Matinar només per aquesta vista"],["Kyoto","Mil torii a Fushimi Inari"],["Osaka","Menjar fins a la ruïna a Dōtonbori"],["Nara","Subornar cérvols amb galetes"],["Hiroshima","Memòria, pau i okonomiyaki"]]},
+eu:{p_for:"Andrearentzat",p1_hint:"Biratu eraztunak. Lerrokatu gorria.",p2_hint:"Begiratu izarrei. Errepikatu hurrenkera.",p3_hint:"Irabazitako bi markak. Ordenan.",
+kicker:"Hegaldi pribatua",tagline:"Gu bion aire-konpainia ofiziala",notif:"Erreserba 1 zain · ANDREA ITURRALDE",cta:"Check-in egin",
+pass_t:"Ontziratze-txartela",lbl_pax:"Bidaiaria",lbl_flight:"Hegaldia",lbl_dep:"Irteera",val_dep:"2027 · lana dugunean",
+lbl_seat:"Eserlekua",val_seat:"1A · leiho ondoan, noski",lbl_class:"Klasea",val_class:"Lehen ∞",lbl_gate:"Atea",tear:"arrastatu",
+dest_lbl:"Helmuga",dest_sub:"Japonia gure zain dago.",signs:"Seinaleak hor zeuden: 東 + 京",cta_itin:"Ibilbidea ikusi",
+itin_t:"Ibilbidea",cta_final:"Erreserba baieztatu",conf:"Erreserba baieztatuta",
+msg:"Zuk Zeelanda Berria oparitu zenidan. Nik Japonia oparitzen dizut. 2027 gurea da.",
+ph_a:"A froga: bidaiariak",ph_b:"B froga: Japonerako entrenatzen",
+lbl_fare:"Tarifa",val_fare:"10¹² musu/pax · masajea barne",lbl_ref:"Lokalizatzailea",lbl_valid:"Balioa",valid:"Betirako · Ez itzulgarria",
+lbl_contact:"Bidaiariaren arreta",fine:"Roca Airways S.A. · Iturralde Travel™-en oinordeko legala · BCN ✈ TYO",
+class_t:"Aukeratu zure klasea",c_eco:"Turista",c_eco_p:"10⁹ musu/pax",c_biz:"Business",c_biz_p:"10¹⁰ musu/pax",
+c_first:"Lehen ∞",c_first_p:"10¹² musu/pax",sold:"Agortuta",foryou:"Zuretzat dagoen klase bakarra",
+perk1:"Leihoa betirako",perk2:"Bagaje emozionala doan",perk3:"V.I.A. miliak — Very Important Andrea",perk4:"Sorbaldako siestak mugarik gabe",
+cta_class:"Ontziratzera jarraitu",crew_t:"Tripulazioa",crew_1:"Kapitaina: R. Roca",crew_2:"Komandante gorena: A. Iturralde",
+ps_hint:"P.D. — ukitu zigilua",ps_msg:"Hegazkinak aitzakia dira. Zurekin, edozein leku da helmuga. Maite zaitut.",
+cards:[["Tokio","Shibuyan gustura galdu"],["Fuji mendia","Goiz jaiki bista honengatik"],["Kioto","Mila torii Fushimi Inarin"],["Osaka","Dōtonborin jan eta jan"],["Nara","Oreinak gailetekin limurtu"],["Hiroshima","Memoria, bakea eta okonomiyakia"]]},
+en:{p_for:"For Andrea",p1_hint:"Turn the rings. Align the red.",p2_hint:"Watch the stars. Repeat their order.",p3_hint:"The two marks you earned. In order.",
+kicker:"Private flight",tagline:"The official airline of us two",notif:"1 pending booking · ANDREA ITURRALDE",cta:"Check in",
+pass_t:"Boarding pass",lbl_pax:"Passenger",lbl_flight:"Flight",lbl_dep:"Departure",val_dep:"2027 · as soon as we're employed",
+lbl_seat:"Seat",val_seat:"1A · window, obviously",lbl_class:"Class",val_class:"First ∞",lbl_gate:"Gate",tear:"slide",
+dest_lbl:"Destination",dest_sub:"Japan is waiting for us.",signs:"The signs were there: 東 + 京",cta_itin:"See itinerary",
+itin_t:"Itinerary",cta_final:"Confirm booking",conf:"Booking confirmed",
+msg:"You gave me New Zealand. I'm giving you Japan. 2027 is ours.",
+ph_a:"Exhibit A: the passengers",ph_b:"Exhibit B: training for Japan",
+lbl_fare:"Fare",val_fare:"10¹² kisses/pax · massage included",lbl_ref:"Booking ref",lbl_valid:"Validity",valid:"Forever · Non-refundable",
+lbl_contact:"Passenger care",fine:"Roca Airways S.A. · Legal successor of Iturralde Travel™ · BCN ✈ TYO",
+class_t:"Choose your class",c_eco:"Economy",c_eco_p:"10⁹ kisses/pax",c_biz:"Business",c_biz_p:"10¹⁰ kisses/pax",
+c_first:"First ∞",c_first_p:"10¹² kisses/pax",sold:"Sold out",foryou:"The only class available for you",
+perk1:"Window seat for life",perk2:"Emotional baggage free of charge",perk3:"V.I.A. miles — Very Important Andrea",perk4:"Unlimited shoulder naps",
+cta_class:"Continue to boarding",crew_t:"Crew",crew_1:"Captain: R. Roca",crew_2:"Supreme commander: A. Iturralde",
+ps_hint:"P.S. — tap the seal",ps_msg:"Planes are the excuse. With you, anywhere is the destination. I love you.",
+cards:[["Tokyo","Getting gloriously lost in Shibuya"],["Mt. Fuji","Waking at dawn just for this view"],["Kyoto","A thousand torii at Fushimi Inari"],["Osaka","Eating ourselves broke in Dōtonbori"],["Nara","Bribing deer with crackers"],["Hiroshima","Memory, peace and okonomiyaki"]]}
+};
+const KJ=["東京","富士山","京都","大阪","奈良","広島"],COD=["TYO","FUJ","KYO","OSA","NRA","HIR"];
+const IC='fill="none" stroke="#d9b36b" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"';
+const ICO=[
+`<svg viewBox="0 0 64 64" ${IC}><path d="M32 7 L46 54 M32 7 L18 54"/><path d="M23 38 H41 M26 26 H38 M29 15 H35"/><path d="M12 54 H52"/><path d="M26 26 L23 38 M38 26 L41 38" stroke-width="1.6"/></svg>`,
+`<svg viewBox="0 0 64 64" ${IC}><path d="M6 52 L25 17 Q32 10 39 17 L58 52"/><path d="M21 25 L25 30 L29 25 L33 30 L37 25 L41 30" stroke-width="2"/><circle cx="50" cy="16" r="4.5" stroke-width="2"/></svg>`,
+`<svg viewBox="0 0 64 64" ${IC}><path d="M8 17 Q32 10 56 17"/><path d="M13 27 H51"/><path d="M18 20 V55 M46 20 V55"/><path d="M32 17 V27"/><path d="M14 55 H22 M42 55 H50" stroke-width="2"/></svg>`,
+`<svg viewBox="0 0 64 64" ${IC}><path d="M14 55 H50"/><path d="M19 55 V46 H45 V55"/><path d="M16 46 Q32 37 48 46"/><path d="M23 37 V31 H41 V37" stroke-width="2.2"/><path d="M20 31 Q32 23 44 31"/><path d="M27 23 V18 H37 V23" stroke-width="2"/><path d="M25 18 Q32 12 39 18"/><path d="M32 12 V7" stroke-width="2"/></svg>`,
+`<svg viewBox="0 0 64 64" ${IC}><path d="M26 44 Q32 51 38 44"/><path d="M26 44 L20 39 M38 44 L44 39" stroke-width="2"/><path d="M28 41 V26 M28 33 L20 26 M28 29 L23 18" stroke-width="2.2"/><path d="M36 41 V26 M36 33 L44 26 M36 29 L41 18" stroke-width="2.2"/><circle cx="32" cy="49" r="1.6" fill="#d9b36b" stroke="none"/></svg>`,
+`<svg viewBox="0 0 64 64" ${IC}><path d="M18 42 L32 28 L46 42 L32 49 Z" stroke-width="2.2"/><path d="M27 33 L34 10 L40 33" stroke-width="2.2"/><path d="M18 42 L9 35 L16 31"/><path d="M46 42 L56 33"/></svg>`];
+let lang="es";
+function setLang(l){lang=l;document.documentElement.lang=l;
+  document.querySelectorAll('#langs button').forEach(b=>b.classList.toggle('on',b.dataset.l===l));
+  document.querySelectorAll('[data-i18n]').forEach(el=>{const v=L[l][el.dataset.i18n];if(v!==undefined)el.textContent=v});
+  document.querySelectorAll('.clscard.dead').forEach(c=>c.setAttribute('data-sold',L[l].sold));
+  buildDeck();}
+document.getElementById('langs').addEventListener('click',e=>{const b=e.target.closest('button');if(b)setLang(b.dataset.l)});
+/* ══════════ router ══════════ */
+const buzz=ms=>{try{navigator.vibrate&&navigator.vibrate(ms)}catch(e){}};
+function go(id){document.querySelectorAll('.screen').forEach(s=>s.classList.toggle('active',s.id===id));
+  document.getElementById('prog').classList.toggle('hidden',!/^g\d/.test(id));
+  if(id==='g2')startP2();if(id==='g3')buildGrid();
+  if(id==='splash')startPetals();
+  if(id==='cert')setTimeout(()=>document.getElementById('hanko').classList.add('stamp'),700);}
+function fragment(k,done){const ov=document.getElementById('fragov');
+  document.getElementById('fragk').textContent=k;
+  ov.classList.add('show');buzz(40);
+  setTimeout(()=>{ov.classList.remove('show');done()},1900);}
+/* hints appear after 14s per puzzle */
+let hintTimers={};
+function armHint(h){clearTimeout(hintTimers[h]);hintTimers[h]=setTimeout(()=>document.getElementById(h).classList.add('show'),14000);}
+armHint('h1');
+/* ══════════ P1 · rings ══════════ */
+const rings=[{el:document.getElementById('r1'),rot:150,band:[44,92]},
+             {el:document.getElementById('r2'),rot:255,band:[92,128]},
+             {el:document.getElementById('r3'),rot:78,band:[128,168]}];
+/* decorative ticks (irregular so only 0° aligns) */
+const TICKS=[[38,105,200,304,310],[22,130,167,248,332],[57,95,205,285,318]];
+rings.forEach((r,i)=>{const g=r.el.querySelector('g');const RAD=[62,102,140][i];
+  TICKS[i].forEach(a=>{const t=a*Math.PI/180,c=Math.cos(t),s=Math.sin(t);
+    const l=document.createElementNS('http://www.w3.org/2000/svg','line');
+    l.setAttribute('x1',170+c*(RAD-8));l.setAttribute('y1',170+s*(RAD-8));
+    l.setAttribute('x2',170+c*(RAD+8));l.setAttribute('y2',170+s*(RAD+8));g.appendChild(l);});
+  r.el.style.transform=`rotate(${r.rot}deg)`;});
+const svg1=document.getElementById('p1svg');let p1act=null,p1a0=0,p1r0=0,p1done=false;
+function angAt(e){const b=svg1.getBoundingClientRect();const x=e.clientX-(b.left+b.width/2),y=e.clientY-(b.top+b.height/2);
+  return{ang:Math.atan2(y,x)*180/Math.PI,rad:Math.hypot(x,y)*(340/b.width)}}
+svg1.addEventListener('pointerdown',e=>{if(p1done)return;const{ang,rad}=angAt(e);
+  p1act=rings.find(r=>rad>=r.band[0]&&rad<r.band[1]);if(!p1act)return;
+  p1a0=ang;p1r0=p1act.rot;svg1.setPointerCapture(e.pointerId);e.preventDefault();});
+svg1.addEventListener('pointermove',e=>{if(!p1act||p1done)return;const{ang}=angAt(e);
+  p1act.rot=p1r0+(ang-p1a0);p1act.el.style.transform=`rotate(${p1act.rot}deg)`;});
+svg1.addEventListener('pointerup',()=>{if(!p1act||p1done)return;p1act=null;
+  const off=r=>{let d=((r.rot%360)+360)%360;return Math.min(d,360-d)};
+  if(rings.every(r=>off(r)<14)){p1done=true;
+    rings.forEach(r=>{r.el.style.transition='transform .7s cubic-bezier(.2,.8,.2,1)';r.el.style.transform='rotate(0deg)'});
+    svg1.classList.add('solved');buzz([30,40,30]);document.getElementById('pr1').classList.add('done');
+    setTimeout(()=>fragment('東',()=>{go('g2');armHint('h2')}),950);}});
+/* ══════════ P2 · stars ══════════ */
+const SPOS=[[13,64],[30,36],[52,58],[72,26],[87,62]];
+const stage=document.getElementById('skystage');let expect=0,p2done=false,p2timers=[];
+const starSVG='<svg viewBox="0 0 24 24"><path d="M12 0 L14.5 9.5 L24 12 L14.5 14.5 L12 24 L9.5 14.5 L0 12 L9.5 9.5 Z" fill="#f0d9a8"/></svg>';
+for(let i=0;i<14;i++){const sp=document.createElement('div');sp.className='speck';
+  sp.style.left=(5+((i*37+13)%90))+'%';sp.style.top=(4+((i*53+29)%88))+'%';stage.appendChild(sp);}
+SPOS.forEach((p,i)=>{const d=document.createElement('div');d.className='star';d.dataset.i=i;
+  d.style.left=p[0]+'%';d.style.top=p[1]+'%';d.innerHTML=starSVG;stage.appendChild(d);
+  d.addEventListener('pointerdown',()=>tapStar(i,d));});
+const stars=()=>[...stage.querySelectorAll('.star')];
+function clearT(){p2timers.forEach(clearTimeout);p2timers=[]}
+function playSeq(){if(p2done)return;clearT();
+  SPOS.forEach((_,i)=>{p2timers.push(setTimeout(()=>{const s=stars()[i];
+    if(!s.classList.contains('lit')){s.classList.add('flare');p2timers.push(setTimeout(()=>s.classList.remove('flare'),330))}},500+i*620));});
+  p2timers.push(setTimeout(playSeq,500+5*620+2600));}
+function startP2(){expect=0;playSeq();}
+function tapStar(i,el){if(p2done)return;
+  if(i===expect){el.classList.add('lit');buzz(15);
+    if(expect>0){const a=SPOS[expect-1],b=SPOS[i],ln=document.createElementNS('http://www.w3.org/2000/svg','line');
+      const r=stage.getBoundingClientRect();
+      ln.setAttribute('x1',a[0]*r.width/100);ln.setAttribute('y1',a[1]*r.height/100);
+      ln.setAttribute('x2',b[0]*r.width/100);ln.setAttribute('y2',b[1]*r.height/100);
+      document.getElementById('lines').appendChild(ln);}
+    expect++;
+    if(expect===SPOS.length){p2done=true;clearT();buzz([30,40,30]);document.getElementById('pr2').classList.add('done');
+      setTimeout(()=>fragment('京',()=>{go('g3');armHint('h3')}),900);}}
+  else{stage.classList.add('shake');buzz(60);clearT();
+    setTimeout(()=>stage.classList.remove('shake'),520);
+    stars().forEach(s=>s.classList.remove('lit'));document.getElementById('lines').innerHTML='';expect=0;
+    p2timers.push(setTimeout(playSeq,800));}}
+/* ══════════ P3 · gate ══════════ */
+const POOL=['東','京','山','月','火','水','空','風','愛'];let pick=0,p3done=false;
+function shuffle(a){a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a}
+function buildGrid(){if(p3done)return;pick=0;
+  document.getElementById('sl1').textContent='';document.getElementById('sl2').textContent='';
+  document.getElementById('sl1').classList.remove('filled');document.getElementById('sl2').classList.remove('filled');
+  const g=document.getElementById('grid');g.innerHTML='';
+  shuffle(POOL).forEach(k=>{const t=document.createElement('button');t.className='tile';t.textContent=k;
+    t.addEventListener('pointerdown',()=>tapTile(t,k));g.appendChild(t);});}
+function tapTile(t,k){if(p3done)return;
+  const want=pick===0?'東':'京';
+  if(k===want){t.classList.add('picked');buzz(15);
+    const sl=document.getElementById(pick===0?'sl1':'sl2');sl.textContent=k;sl.classList.add('filled');pick++;
+    if(pick===2){p3done=true;document.getElementById('pr3').classList.add('done');
+      document.getElementById('gate').classList.add('open');buzz([40,60,80]);
+      setTimeout(()=>{const f=document.getElementById('flash');f.style.opacity=.9;
+        setTimeout(()=>{f.style.opacity=0;go('splash')},420);},900);}}
+  else{const g=document.getElementById('grid');g.classList.add('shake');buzz(60);
+    setTimeout(()=>{g.classList.remove('shake');buildGrid()},520);}}
+/* ══════════ boarding pass tear ══════════ */
+const stub=document.getElementById('stub');let sx=0,dx=0,dragging=false,torn=false;
+stub.addEventListener('pointerdown',e=>{if(torn)return;dragging=true;sx=e.clientX;dx=0;
+  stub.classList.add('drag');stub.setPointerCapture(e.pointerId);});
+stub.addEventListener('pointermove',e=>{if(!dragging||torn)return;dx=Math.max(0,e.clientX-sx);
+  stub.style.transform=`translateX(${dx}px) rotate(${Math.min(dx/16,9)}deg)`;});
+stub.addEventListener('pointerup',()=>{if(!dragging||torn)return;dragging=false;stub.classList.remove('drag');
+  if(dx>stub.offsetWidth*.4){torn=true;stub.classList.add('torn');buzz([20,30,50]);
+    setTimeout(()=>{document.getElementById('pass').classList.add('lift');
+      setTimeout(()=>go('reveal'),450)},350);}
+  else stub.style.transform='';});
+/* ══════════ itinerary ══════════ */
+function buildDeck(){const d=document.getElementById('deck');d.innerHTML='';
+  L[lang].cards.forEach((c,i)=>{const el=document.createElement('div');el.className='card';
+    el.innerHTML=`<span class="num">0${i+1} / 06</span><div class="em">${ICO[i]}</div>
+      <div class="kj">${KJ[i]}</div><div class="ct">${c[0]}</div><div class="cs">${c[1]}</div>`;
+    d.appendChild(el);});
+  syncRoute(curCity);}
+const CITY=[[277.6,147.2],[261.2,153.4],[214.7,160.1],[210.5,166.2],[215.2,166.2],[162.7,172]];
+const CLBL=[[302,150],[248,143],[200,150],[191,183],[247,174],[162,189]];
+let curCity=0;
+(function initMap(){const st=document.getElementById('stations');
+  document.getElementById('jroute').setAttribute('d','M'+CITY.map(p=>p.join(' ')).join(' L '));
+  CITY.forEach((p,i)=>{const ci=document.createElementNS('http://www.w3.org/2000/svg','circle');
+    ci.setAttribute('cx',p[0]);ci.setAttribute('cy',p[1]);ci.setAttribute('r',5);ci.dataset.i=i;
+    ci.setAttribute('class','city');st.appendChild(ci);
+    const tx=document.createElementNS('http://www.w3.org/2000/svg','text');
+    tx.setAttribute('x',CLBL[i][0]);tx.setAttribute('y',CLBL[i][1]);tx.textContent=COD[i];tx.dataset.i=i;st.appendChild(tx);});
+})();
+function syncRoute(idx){curCity=idx;
+  document.querySelectorAll('#stations circle,#stations text')
+    .forEach(n=>n.classList.toggle('on',+n.dataset.i===idx));
+  const p=CITY[idx];
+  document.getElementById('jplane').setAttribute('transform',`translate(${p[0]} ${p[1]-14})`);}
+document.getElementById('deck').addEventListener('scroll',e=>{const d=e.target;
+  const c=d.querySelector('.card');if(!c)return;
+  const w=c.offsetWidth+14;syncRoute(Math.max(0,Math.min(5,Math.round(d.scrollLeft/w))));},{passive:true});
+/* ══════════ nav buttons ══════════ */
+document.getElementById('bCheckin').addEventListener('click',()=>go('clssel'));
+document.getElementById('bClass').addEventListener('click',()=>go('board'));
+['cEco','cBiz'].forEach(id=>{const c=document.getElementById(id);
+  c.addEventListener('pointerdown',()=>{c.classList.add('shake');buzz(50);
+    setTimeout(()=>c.classList.remove('shake'),520);});});
+document.getElementById('cFirst').addEventListener('pointerdown',()=>buzz(15));
+document.getElementById('bItin').addEventListener('click',()=>go('itin'));
+document.getElementById('bFinal').addEventListener('click',()=>go('cert'));
+document.getElementById('hanko').addEventListener('click',()=>{
+  document.getElementById('psov').classList.add('show');buzz(20);});
+document.getElementById('psov').addEventListener('click',()=>
+  document.getElementById('psov').classList.remove('show'));
+/* ══════════ reveal stars ══════════ */
+const sky=document.getElementById('skybits');
+for(let i=0;i<26;i++){const s=document.createElement('div');s.className='st';
+  s.style.left=((i*41+7)%96)+'%';s.style.top=((i*29+11)%70)+'%';s.style.animationDelay=(i%7*.4)+'s';sky.appendChild(s);}
+/* ══════════ petals ══════════ */
+const cv=document.getElementById('petals'),cx2=cv.getContext('2d');
+let PW,PH,pts=[],petON=false;const DPR=Math.min(window.devicePixelRatio||1,2);
+function pRes(){PW=cv.width=innerWidth*DPR;PH=cv.height=innerHeight*DPR;
+  cv.style.width=innerWidth+'px';cv.style.height=innerHeight+'px';}
+pRes();addEventListener('resize',pRes);
+function addPetal(x,y,burst){pts.push({x:x??Math.random()*PW,y:y??-30,
+  r:(4.5+Math.random()*5.5)*DPR,a:Math.random()*6.28,va:(Math.random()-.5)*.06,
+  vx:burst?(Math.random()-.5)*9*DPR:(Math.random()-.5)*.9*DPR,
+  vy:burst?-(2+Math.random()*5)*DPR:(0.7+Math.random()*1.2)*DPR,
+  sw:Math.random()*6.28,o:.45+Math.random()*.45,b:!!burst});}
+function petLoop(){cx2.clearRect(0,0,PW,PH);
+  pts=pts.filter(p=>p.y<PH+40&&p.o>0);
+  if(petON&&pts.filter(p=>!p.b).length<26&&Math.random()<.2)addPetal();
+  pts.forEach(p=>{p.sw+=.018;p.x+=p.vx+Math.sin(p.sw)*.7*DPR;p.y+=p.vy;p.a+=p.va;
+    if(p.b){p.vy+=.12*DPR;p.o-=.008}
+    cx2.save();cx2.translate(p.x,p.y);cx2.rotate(p.a);cx2.globalAlpha=Math.max(0,p.o);
+    const g=cx2.createLinearGradient(-p.r,0,p.r,0);
+    g.addColorStop(0,'#f2b8c6');g.addColorStop(1,'#e295ab');cx2.fillStyle=g;
+    cx2.beginPath();cx2.ellipse(0,0,p.r,p.r*.62,0,0,6.28);cx2.fill();cx2.restore();});
+  requestAnimationFrame(petLoop);}
+petLoop();
+function startPetals(){petON=true;}
+document.getElementById('cert').addEventListener('pointerdown',e=>{
+  for(let i=0;i<14;i++)addPetal(e.clientX*DPR,e.clientY*DPR,true);buzz(10);});
+/* ══════════ music ══════════ */
+const au=new Audio('music.mp3');au.loop=true;au.preload='auto';au.volume=0;
+const sbtn=document.getElementById('sndbtn');let sndState=null,fadeT=null;
+au.addEventListener('error',()=>sbtn.classList.add('hidden'));
+function fadeTo(v){clearInterval(fadeT);fadeT=setInterval(()=>{
+  const d=v-au.volume;if(Math.abs(d)<.03){au.volume=v;clearInterval(fadeT);if(v===0)au.pause();return}
+  au.volume+=d*.12;},60);}
+function sndOn(){sndState=true;sbtn.classList.remove('off');
+  au.play().then(()=>fadeTo(.55)).catch(()=>{});}
+function sndOff(){sndState=false;sbtn.classList.add('off');fadeTo(0);}
+sbtn.addEventListener('click',e=>{e.stopPropagation();sndState?sndOff():sndOn();});
+document.addEventListener('pointerdown',function autoSnd(e){
+  if(e.target.closest('#sndbtn'))return;
+  if(sndState===null)sndOn();
+  document.removeEventListener('pointerdown',autoSnd);},true);
+/* ══════════ init ══════════ */
+setLang('es');
+</script>
+</body>
+</html>
